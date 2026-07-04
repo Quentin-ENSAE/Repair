@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { Profile } from "../types";
+import { AccountType, Profile } from "../types";
 
 const STORAGE_KEY = "repair-ai-session";
 
 interface Account {
+  type: AccountType;
   pseudonyme: string;
   age: number;
 }

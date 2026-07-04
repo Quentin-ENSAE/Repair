@@ -6,7 +6,7 @@ import { LandingPage } from "./pages/LandingPage";
 import { SignupPage } from "./pages/SignupPage";
 import { QuestionnairePage } from "./pages/QuestionnairePage";
 import { RecommendationsPage } from "./pages/RecommendationsPage";
-import { PairAidantProfilePage } from "./pages/PairAidantProfilePage";
+import { BinomeProfilePage } from "./pages/BinomeProfilePage";
 
 export default function App() {
   return (
@@ -18,7 +18,7 @@ export default function App() {
             <Route path="/creer-un-compte" element={<SignupPage />} />
             <Route path="/questionnaire" element={<QuestionnairePage />} />
             <Route path="/recommandations" element={<RecommendationsPage />} />
-            <Route path="/pair-aidants/:id" element={<PairAidantProfilePage />} />
+            <Route path="/binomes/:id" element={<BinomeProfilePage />} />
           </Route>
         </Routes>
       </BrowserRouter>
