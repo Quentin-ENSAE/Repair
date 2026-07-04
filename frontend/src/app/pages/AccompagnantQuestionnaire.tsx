@@ -7,25 +7,26 @@ import {
   ANCIENNETES,
   CentreInteret,
   CENTRES_INTERET,
-  JourSemaine,
-  JOURS_SEMAINE,
   Langue,
   LANGUES,
   Modalite,
   MODALITES,
   MomentJournee,
   MOMENTS_JOURNEE,
-  TypePersonneAAccompagner,
-  TYPES_PERSONNES_A_ACCOMPAGNER,
+  JourSemaine,
+  TroublePsychique,
+  TROUBLES_PSYCHIQUES,
 } from "../types";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
 import { Label } from "../components/ui/label";
+import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { CheckboxGroupField } from "../components/questionnaire/CheckboxGroupField";
 import { RadioGroupField } from "../components/questionnaire/RadioGroupField";
 import { StepNav } from "../components/questionnaire/StepNav";
+import { DaysTable } from "../components/questionnaire/DaysTable";
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 4;
 
 export function AccompagnantQuestionnaire({
   pseudonyme,
@@ -42,11 +43,15 @@ export function AccompagnantQuestionnaire({
   const [step, setStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
-  const [ancienneteImplication, setAncienneteImplication] = useState<Anciennete | "">(
-    existingProfile?.ancienneteImplication ?? "",
+  const [diagnosticPose, setDiagnosticPose] = useState<"Oui" | "Non" | "">(
+    existingProfile ? (existingProfile.diagnosticPose ? "Oui" : "Non") : "",
   );
-  const [typesPersonnesAAccompagner, setTypesPersonnesAAccompagner] = useState<TypePersonneAAccompagner[]>(
-    existingProfile?.typesPersonnesAAccompagner ?? [],
+  const [troublesPsychiques, setTroublesPsychiques] = useState<TroublePsychique[]>(
+    existingProfile?.troublesPsychiques ?? [],
+  );
+  const [troubleAutrePrecision, setTroubleAutrePrecision] = useState(existingProfile?.troubleAutrePrecision ?? "");
+  const [ancienneteDiagnostic, setAncienneteDiagnostic] = useState<Anciennete | "">(
+    existingProfile?.ancienneteDiagnostic ?? "",
   );
 
   const [quiEtesVous, setQuiEtesVous] = useState(existingProfile?.quiEtesVous ?? "");
@@ -80,25 +85,28 @@ export function AccompagnantQuestionnaire({
 
   function validateStep(): string | null {
     if (step === 0) {
-      if (!ancienneteImplication) return "Merci d'indiquer depuis quand vous êtes impliqué.";
-      if (typesPersonnesAAccompagner.length === 0) return "Merci de sélectionner au moins un type de personne.";
-    }
-    if (step === 1) {
+      if (!diagnosticPose) return "Merci d'indiquer si un diagnostic a été posé.";
+      if (diagnosticPose === "Oui" && (troublesPsychiques.length === 0 || !ancienneteDiagnostic)) {
+        return "Merci de préciser le(s) diagnostic(s) et leur ancienneté.";
+      }
+      if (diagnosticPose === "Oui" && troublesPsychiques.includes("Autre") && !troubleAutrePrecision.trim()) {
+        return "Merci de préciser votre diagnostic.";
+      }
       if (!quiEtesVous.trim() || !quotidien.trim() || !commentProchesDecriraient.trim() || !passionsInterets.trim()) {
-        return "Merci de compléter les 4 questions.";
+        return "Merci de compléter les 4 questions de la section \"Faisons connaissance\".";
       }
       if (centresInteret.length === 0) return "Merci de sélectionner au moins un centre d'intérêt.";
       if (langues.length === 0) return "Merci de sélectionner au moins une langue.";
     }
-    if (step === 2) {
+    if (step === 1) {
       if (!lienHandicapSensibilisation.trim() || !aideForme.trim() || !limites.trim() || !typePersonneAlaise.trim()) {
         return "Merci de compléter les 4 questions.";
       }
     }
-    if (step === 3) {
+    if (step === 2) {
       if (!motivation.trim() || !binomeIdeal.trim()) return "Merci de compléter les 2 questions.";
     }
-    if (step === 4) {
+    if (step === 3) {
       if (disponibilitesJours.length === 0 || disponibilitesMoments.length === 0) {
         return "Merci d'indiquer vos disponibilités.";
       }
@@ -125,8 +133,10 @@ export function AccompagnantQuestionnaire({
       id: existingProfile?.id ?? Date.now(),
       pseudonyme,
       age,
-      ancienneteImplication: ancienneteImplication as Anciennete,
-      typesPersonnesAAccompagner,
+      diagnosticPose: diagnosticPose === "Oui",
+      troublesPsychiques: diagnosticPose === "Oui" ? troublesPsychiques : [],
+      troubleAutrePrecision: troubleAutrePrecision.trim() || undefined,
+      ancienneteDiagnostic: diagnosticPose === "Oui" ? ancienneteDiagnostic || undefined : undefined,
       quiEtesVous: quiEtesVous.trim(),
       quotidien: quotidien.trim(),
       commentProchesDecriraient: commentProchesDecriraient.trim(),
@@ -162,24 +172,39 @@ export function AccompagnantQuestionnaire({
           {step === 0 && (
             <>
               <RadioGroupField
-                idPrefix="anciennete-impl"
-                label="Depuis combien de temps accompagnez-vous ou êtes-vous impliqué dans ce domaine ?"
-                options={ANCIENNETES}
-                value={ancienneteImplication}
-                onChange={setAncienneteImplication}
+                idPrefix="diagnostic"
+                label="Un professionnel de santé vous a-t-il posé un diagnostic ?"
+                options={["Oui", "Non"] as const}
+                value={diagnosticPose}
+                onChange={setDiagnosticPose}
               />
-              <CheckboxGroupField
-                idPrefix="type-personne"
-                label="Quels types de personnes souhaitez-vous accompagner ?"
-                options={TYPES_PERSONNES_A_ACCOMPAGNER}
-                values={typesPersonnesAAccompagner}
-                onChange={setTypesPersonnesAAccompagner}
-              />
-            </>
-          )}
 
-          {step === 1 && (
-            <>
+              {diagnosticPose === "Oui" && (
+                <>
+                  <CheckboxGroupField
+                    idPrefix="trouble"
+                    label="Si oui, lequel ? (plusieurs choix possibles)"
+                    options={TROUBLES_PSYCHIQUES}
+                    values={troublesPsychiques}
+                    onChange={setTroublesPsychiques}
+                  />
+                  {troublesPsychiques.includes("Autre") && (
+                    <Input
+                      value={troubleAutrePrecision}
+                      onChange={(e) => setTroubleAutrePrecision(e.target.value)}
+                      placeholder="Précisez..."
+                    />
+                  )}
+                  <RadioGroupField
+                    idPrefix="anciennete"
+                    label="Depuis combien de temps vivez-vous avec ce diagnostic ?"
+                    options={ANCIENNETES}
+                    value={ancienneteDiagnostic}
+                    onChange={setAncienneteDiagnostic}
+                  />
+                </>
+              )}
+
               <p className="text-sm font-semibold text-primary">Faisons connaissance</p>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="quiEtesVous">
@@ -232,7 +257,7 @@ export function AccompagnantQuestionnaire({
             </>
           )}
 
-          {step === 2 && (
+          {step === 1 && (
             <>
               <p className="text-sm font-semibold text-primary">Ce que vous pouvez apporter</p>
               <div className="flex flex-col gap-2">
@@ -271,7 +296,7 @@ export function AccompagnantQuestionnaire({
             </>
           )}
 
-          {step === 3 && (
+          {step === 2 && (
             <>
               <p className="text-sm font-semibold text-primary">Vos attentes</p>
               <div className="flex flex-col gap-2">
@@ -292,12 +317,10 @@ export function AccompagnantQuestionnaire({
             </>
           )}
 
-          {step === 4 && (
+          {step === 3 && (
             <>
-              <CheckboxGroupField
-                idPrefix="jour"
+              <DaysTable
                 label="Vos disponibilités — jours"
-                options={JOURS_SEMAINE}
                 values={disponibilitesJours}
                 onChange={setDisponibilitesJours}
               />

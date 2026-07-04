@@ -91,10 +91,6 @@ export function BinomeProfilePage() {
               <dt className="text-muted-foreground">Qui est {accompagnant.pseudonyme}</dt>
               <dd className="font-medium">{accompagnant.quiEtesVous}</dd>
             </div>
-            <div>
-              <dt className="text-muted-foreground">Depuis combien de temps</dt>
-              <dd className="font-medium">{accompagnant.ancienneteImplication}</dd>
-            </div>
             <div className="sm:col-span-2">
               <dt className="text-muted-foreground mb-1">Centres d'intérêt</dt>
               <dd className="flex flex-wrap gap-2">

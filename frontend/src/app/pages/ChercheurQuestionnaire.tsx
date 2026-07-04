@@ -29,7 +29,7 @@ import { CheckboxGroupField } from "../components/questionnaire/CheckboxGroupFie
 import { RadioGroupField } from "../components/questionnaire/RadioGroupField";
 import { StepNav } from "../components/questionnaire/StepNav";
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 4;
 
 export function ChercheurQuestionnaire({
   pseudonyme,
@@ -45,8 +45,6 @@ export function ChercheurQuestionnaire({
 
   const [step, setStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
-
-  const [etatBienEtre, setEtatBienEtre] = useState<NiveauBienEtre>(existingProfile?.etatBienEtre ?? 3);
 
   const [diagnosticPose, setDiagnosticPose] = useState<"Oui" | "Non" | "">(
     existingProfile ? (existingProfile.diagnosticPose ? "Oui" : "Non") : "",
@@ -86,6 +84,7 @@ export function ChercheurQuestionnaire({
   const [modalitesSouhaitees, setModalitesSouhaitees] = useState<Modalite[]>(
     existingProfile?.modalitesSouhaitees ?? [],
   );
+  const [etatBienEtre, setEtatBienEtre] = useState<NiveauBienEtre>(existingProfile?.etatBienEtre ?? 3);
 
   function toggleTrouble(t: TroublePsychique) {
     setTroublesPsychiques((prev) => (prev.includes(t) ? prev.filter((v) => v !== t) : [...prev, t]));
@@ -100,15 +99,13 @@ export function ChercheurQuestionnaire({
       if (diagnosticPose === "Oui" && troublesPsychiques.includes("Autre") && !troubleAutrePrecision.trim()) {
         return "Merci de préciser votre diagnostic.";
       }
-    }
-    if (step === 1) {
       if (!quiEtesVous.trim() || !quotidien.trim() || !commentProchesDecriraient.trim() || !passionsInterets.trim()) {
-        return "Merci de compléter les 4 questions.";
+        return "Merci de compléter les 4 questions de la section \"Faisons connaissance\".";
       }
       if (centresInteret.length === 0) return "Merci de sélectionner au moins un centre d'intérêt.";
       if (langues.length === 0) return "Merci de sélectionner au moins une langue.";
     }
-    if (step === 2) {
+    if (step === 1) {
       if (
         !lienHandicap.trim() ||
         !difficultesQuotidien.trim() ||
@@ -119,10 +116,10 @@ export function ChercheurQuestionnaire({
         return "Merci de compléter les 5 questions.";
       }
     }
-    if (step === 3) {
+    if (step === 2) {
       if (!motivation.trim() || !binomeIdeal.trim()) return "Merci de compléter les 2 questions.";
     }
-    if (step === 4) {
+    if (step === 3) {
       if (!frequenceSouhaitee) return "Merci d'indiquer la fréquence souhaitée.";
       if (frequenceSouhaitee === "Accompagnement régulier" && !rythmeRegulier) {
         return "Merci de préciser le rythme souhaité.";
@@ -150,7 +147,6 @@ export function ChercheurQuestionnaire({
       id: existingProfile?.id ?? Date.now(),
       pseudonyme,
       age,
-      etatBienEtre,
       diagnosticPose: diagnosticPose === "Oui",
       troublesPsychiques: diagnosticPose === "Oui" ? troublesPsychiques : [],
       troubleAutrePrecision: troubleAutrePrecision.trim() || undefined,
@@ -171,6 +167,7 @@ export function ChercheurQuestionnaire({
       frequenceSouhaitee: frequenceSouhaitee as Frequence,
       rythmeRegulier: frequenceSouhaitee === "Accompagnement régulier" ? rythmeRegulier || undefined : undefined,
       modalitesSouhaitees,
+      etatBienEtre,
     });
     navigate("/recommandations");
   }
@@ -192,20 +189,6 @@ export function ChercheurQuestionnaire({
         <div className="flex flex-col gap-8">
           {step === 0 && (
             <>
-              <div className="flex flex-col gap-3">
-                <Label>Comment vous sentez-vous aujourd'hui ?</Label>
-                <Slider
-                  min={1}
-                  max={5}
-                  step={1}
-                  value={[etatBienEtre]}
-                  onValueChange={([v]) => setEtatBienEtre(v as NiveauBienEtre)}
-                />
-                <p className="text-sm text-center font-medium text-primary">
-                  {etatBienEtre} — {NIVEAUX_BIEN_ETRE[etatBienEtre]}
-                </p>
-              </div>
-
               <RadioGroupField
                 idPrefix="diagnostic"
                 label="Un professionnel de santé vous a-t-il posé un diagnostic ?"
@@ -239,11 +222,7 @@ export function ChercheurQuestionnaire({
                   />
                 </>
               )}
-            </>
-          )}
 
-          {step === 1 && (
-            <>
               <p className="text-sm font-semibold text-primary">Faisons connaissance</p>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="quiEtesVous">
@@ -296,12 +275,13 @@ export function ChercheurQuestionnaire({
             </>
           )}
 
-          {step === 2 && (
+          {step === 1 && (
             <>
               <p className="text-sm font-semibold text-primary">Votre situation</p>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="lienHandicap">
-                  Quel est votre lien avec le handicap ? (le diagnostic précis est facultatif)
+                  Quel est votre lien avec le handicap ? Si vous le souhaitez, vous pouvez préciser le diagnostic —
+                  c'est facultatif.
                 </Label>
                 <Textarea id="lienHandicap" value={lienHandicap} onChange={(e) => setLienHandicap(e.target.value)} rows={3} />
               </div>
@@ -345,7 +325,7 @@ export function ChercheurQuestionnaire({
             </>
           )}
 
-          {step === 3 && (
+          {step === 2 && (
             <>
               <p className="text-sm font-semibold text-primary">Vos attentes</p>
               <div className="flex flex-col gap-2">
@@ -364,7 +344,7 @@ export function ChercheurQuestionnaire({
             </>
           )}
 
-          {step === 4 && (
+          {step === 3 && (
             <>
               <RadioGroupField
                 idPrefix="frequence"
@@ -390,6 +370,20 @@ export function ChercheurQuestionnaire({
                 onChange={setModalitesSouhaitees}
                 columns={1}
               />
+
+              <div className="flex flex-col gap-3">
+                <Label>Comment vous sentez-vous aujourd'hui ?</Label>
+                <Slider
+                  min={1}
+                  max={5}
+                  step={1}
+                  value={[etatBienEtre]}
+                  onValueChange={([v]) => setEtatBienEtre(v as NiveauBienEtre)}
+                />
+                <p className="text-sm text-center font-medium text-primary">
+                  {etatBienEtre} — {NIVEAUX_BIEN_ETRE[etatBienEtre]}
+                </p>
+              </div>
             </>
           )}
 

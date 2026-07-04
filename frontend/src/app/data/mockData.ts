@@ -8,7 +8,6 @@ export const DEMO_CHERCHEUR_PROFILE: ChercheurProfile = {
   id: 1,
   pseudonyme: "Sam",
   age: 28,
-  etatBienEtre: 3,
 
   diagnosticPose: true,
   troublesPsychiques: ["Trouble bipolaire"],
@@ -33,6 +32,7 @@ export const DEMO_CHERCHEUR_PROFILE: ChercheurProfile = {
   frequenceSouhaitee: "Accompagnement régulier",
   rythmeRegulier: "Toutes les semaines",
   modalitesSouhaitees: ["Chat", "Visioconférence"],
+  etatBienEtre: 3,
 };
 
 export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
@@ -41,8 +41,9 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     id: 101,
     pseudonyme: "Amine",
     age: 34,
-    ancienneteImplication: "Plus de 5 ans",
-    typesPersonnesAAccompagner: ["Diagnostic récent", "Personnes isolées"],
+    diagnosticPose: true,
+    troublesPsychiques: ["Trouble bipolaire"],
+    ancienneteDiagnostic: "Plus de 5 ans",
 
     quiEtesVous: "Je suis quelqu'un de calme, à l'écoute, qui aime prendre le temps avec les gens.",
     quotidien: "Je travaille dans le social et je consacre mes soirées à la musique et à la lecture.",
@@ -69,8 +70,8 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     id: 102,
     pseudonyme: "Sofia",
     age: 29,
-    ancienneteImplication: "2 à 5 ans",
-    typesPersonnesAAccompagner: ["Étudiants", "Jeunes actifs"],
+    diagnosticPose: false,
+    troublesPsychiques: [],
 
     quiEtesVous: "Je suis dynamique et organisée, j'aime aider les gens à avancer concrètement.",
     quotidien: "Entre le sport, la cuisine et mon travail, mes journées sont bien remplies.",
@@ -96,8 +97,9 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     id: 103,
     pseudonyme: "Karim",
     age: 41,
-    ancienneteImplication: "Plus de 5 ans",
-    typesPersonnesAAccompagner: ["Diagnostic récent"],
+    diagnosticPose: true,
+    troublesPsychiques: ["Dépression chronique"],
+    ancienneteDiagnostic: "Plus de 5 ans",
 
     quiEtesVous: "Calme et discret, j'aime transmettre ce que mon propre parcours m'a appris.",
     quotidien: "Je travaille dans la tech, et je joue beaucoup aux jeux vidéo pour décompresser.",
@@ -123,8 +125,8 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     id: 104,
     pseudonyme: "Lina",
     age: 26,
-    ancienneteImplication: "6 mois à 2 ans",
-    typesPersonnesAAccompagner: ["Personnes isolées"],
+    diagnosticPose: false,
+    troublesPsychiques: [],
 
     quiEtesVous: "Douce et attentive, je crois beaucoup à la force de l'écoute simple.",
     quotidien: "Entre mes études d'art et mes lectures, je prends aussi du temps pour ma famille.",
@@ -150,8 +152,8 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     id: 105,
     pseudonyme: "Youssef",
     age: 38,
-    ancienneteImplication: "Plus de 5 ans",
-    typesPersonnesAAccompagner: ["Peu importe"],
+    diagnosticPose: false,
+    troublesPsychiques: [],
 
     quiEtesVous: "Curieux et ouvert d'esprit, j'aime les échanges libres, sans cadre trop strict.",
     quotidien: "Je voyage beaucoup pour le travail et je reste très connecté à la technologie.",
@@ -177,8 +179,9 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     id: 106,
     pseudonyme: "Nora",
     age: 45,
-    ancienneteImplication: "Plus de 5 ans",
-    typesPersonnesAAccompagner: ["Adultes", "Diagnostic récent"],
+    diagnosticPose: true,
+    troublesPsychiques: ["Trouble anxieux"],
+    ancienneteDiagnostic: "Plus de 5 ans",
 
     quiEtesVous: "Expérimentée et rassurante, mon parcours m'a appris beaucoup.",
     quotidien: "Je partage mon temps entre la lecture, la cuisine et ma famille.",
@@ -204,8 +207,8 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     id: 107,
     pseudonyme: "Adam",
     age: 31,
-    ancienneteImplication: "2 à 5 ans",
-    typesPersonnesAAccompagner: ["Étudiants", "Jeunes actifs"],
+    diagnosticPose: false,
+    troublesPsychiques: [],
 
     quiEtesVous: "Structuré et pragmatique, j'aime aider à trouver des solutions concrètes.",
     quotidien: "Je travaille dans l'informatique et je joue aux jeux vidéo pour me détendre.",
@@ -231,8 +234,9 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     id: 108,
     pseudonyme: "Emma",
     age: 27,
-    ancienneteImplication: "6 mois à 2 ans",
-    typesPersonnesAAccompagner: ["Personnes isolées", "Diagnostic récent"],
+    diagnosticPose: true,
+    troublesPsychiques: ["Dépression chronique"],
+    ancienneteDiagnostic: "2 à 5 ans",
 
     quiEtesVous: "Bienveillante et patiente, je crois beaucoup à la puissance de l'écoute.",
     quotidien: "Entre l'art, la musique et les voyages, je cherche toujours à créer du lien.",
@@ -258,8 +262,8 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     id: 109,
     pseudonyme: "Bilal",
     age: 50,
-    ancienneteImplication: "Plus de 5 ans",
-    typesPersonnesAAccompagner: ["Adultes", "Peu importe"],
+    diagnosticPose: false,
+    troublesPsychiques: [],
 
     quiEtesVous: "Ouvert et posé, je crois à la force de la discussion libre.",
     quotidien: "Je travaille dans la tech, entouré de mes livres et de mes animaux.",
@@ -285,8 +289,9 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     id: 110,
     pseudonyme: "Chloé",
     age: 33,
-    ancienneteImplication: "2 à 5 ans",
-    typesPersonnesAAccompagner: ["Diagnostic récent", "Personnes isolées"],
+    diagnosticPose: true,
+    troublesPsychiques: ["Trouble bipolaire"],
+    ancienneteDiagnostic: "2 à 5 ans",
 
     quiEtesVous: "Authentique et rassurante, je veux montrer que la fissure peut devenir une force.",
     quotidien: "Entre la cuisine, le cinéma et les voyages, je cherche à profiter du quotidien malgré tout.",

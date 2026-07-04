@@ -17,16 +17,6 @@ export type TroublePsychique = (typeof TROUBLES_PSYCHIQUES)[number];
 export const ANCIENNETES = ["Moins de 6 mois", "6 mois à 2 ans", "2 à 5 ans", "Plus de 5 ans"] as const;
 export type Anciennete = (typeof ANCIENNETES)[number];
 
-export const TYPES_PERSONNES_A_ACCOMPAGNER = [
-  "Diagnostic récent",
-  "Personnes isolées",
-  "Étudiants",
-  "Jeunes actifs",
-  "Adultes",
-  "Peu importe",
-] as const;
-export type TypePersonneAAccompagner = (typeof TYPES_PERSONNES_A_ACCOMPAGNER)[number];
-
 export const CENTRES_INTERET = [
   "Sport",
   "Musique",
@@ -69,12 +59,17 @@ export const NIVEAUX_BIEN_ETRE = {
 export type NiveauBienEtre = 1 | 2 | 3 | 4 | 5;
 
 /**
- * Étape 2 — "Faisons connaissance" : commune aux deux profils, entièrement
- * en questions ouvertes (matière première du message/de l'explication IA),
- * complétée par un mini-socle structuré (intérêts, langues) qui alimente le
- * score de compatibilité de façon fiable.
+ * Étape 1 — commune aux deux profils : diagnostic éventuel + "Faisons
+ * connaissance" (questions ouvertes, matière première du message/de
+ * l'explication IA, complétées par un mini-socle structuré — intérêts,
+ * langues — qui alimente le score de compatibilité de façon fiable).
  */
-export interface FaisonsConnaissance {
+export interface EtapeCommune {
+  diagnosticPose: boolean;
+  troublesPsychiques: TroublePsychique[];
+  troubleAutrePrecision?: string;
+  ancienneteDiagnostic?: Anciennete;
+
   quiEtesVous: string;
   quotidien: string;
   commentProchesDecriraient: string;
@@ -83,57 +78,47 @@ export interface FaisonsConnaissance {
   langues: Langue[];
 }
 
-export interface ChercheurProfile extends FaisonsConnaissance {
+export interface ChercheurProfile extends EtapeCommune {
   type: "chercheur";
   id: number;
   pseudonyme: string;
   age: number;
 
-  etatBienEtre: NiveauBienEtre;
-
-  diagnosticPose: boolean;
-  troublesPsychiques: TroublePsychique[];
-  troubleAutrePrecision?: string;
-  ancienneteDiagnostic?: Anciennete;
-
-  // Étape 3 — "Votre situation" (texte libre)
+  // Étape 2A — "Votre situation" (texte libre)
   lienHandicap: string;
   difficultesQuotidien: string;
   reculStrategiesForces: string;
   aideBinome: string;
   confianceRelation: string;
 
-  // Étape 4 — "Vos attentes" (texte libre)
+  // Étape 3 — "Vos attentes" (texte libre)
   motivation: string;
   binomeIdeal: string;
 
-  // Étape 5 — Disponibilité (structuré)
+  // Étape 4A — Disponibilité (structuré) + bien-être
   frequenceSouhaitee: Frequence;
   rythmeRegulier?: RythmeRegulier;
   modalitesSouhaitees: Modalite[];
+  etatBienEtre: NiveauBienEtre;
 }
 
-export interface AccompagnantProfile extends FaisonsConnaissance {
+export interface AccompagnantProfile extends EtapeCommune {
   type: "accompagnant";
   id: number;
   pseudonyme: string;
   age: number;
 
-  // Étape 1 — conservée
-  ancienneteImplication: Anciennete;
-  typesPersonnesAAccompagner: TypePersonneAAccompagner[];
-
-  // Étape 3 — "Ce que vous pouvez apporter" (texte libre)
+  // Étape 2B — "Ce que vous pouvez apporter" (texte libre)
   lienHandicapSensibilisation: string;
   aideForme: string;
   limites: string;
   typePersonneAlaise: string;
 
-  // Étape 4 — "Vos attentes" (texte libre)
+  // Étape 3 — "Vos attentes" (texte libre)
   motivation: string;
   binomeIdeal: string;
 
-  // Étape 5 — Disponibilités (structuré)
+  // Étape 4B — Disponibilités (structuré)
   disponibilitesJours: JourSemaine[];
   disponibilitesMoments: MomentJournee[];
   modalitesProposees: Modalite[];
