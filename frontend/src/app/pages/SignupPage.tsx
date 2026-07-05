@@ -64,7 +64,7 @@ export function SignupPage() {
             <CardContent>
               <form className="flex flex-col gap-6" onSubmit={handleStep1}>
                 <RadioGroup value={accountType} onValueChange={(v) => setAccountType(v as AccountType)}>
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-3 rounded-xl border border-border bg-secondary/20 p-4">
                     <p className="text-sm font-semibold text-primary">Pair-aidance</p>
                     <div className="flex items-center gap-2">
                       <RadioGroupItem value="chercheur" id="type-chercheur" />
@@ -78,6 +78,10 @@ export function SignupPage() {
                         Je souhaite accompagner une personne
                       </Label>
                     </div>
+                    <p className="text-xs text-muted-foreground">
+                      Confidentialité de vos données garantie. RePair est une plateforme de confiance, pensée
+                      pour un accompagnement bienveillant et sécurisé.
+                    </p>
                   </div>
 
                   <div className="flex flex-col gap-3 rounded-xl border border-border bg-secondary/40 p-4">
