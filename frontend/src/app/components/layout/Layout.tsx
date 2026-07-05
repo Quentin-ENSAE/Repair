@@ -1,6 +1,6 @@
 import { Link, Outlet, useNavigate } from "react-router";
+import { BarChart3, Home, User } from "lucide-react";
 import { Logo } from "./Logo";
-import { Avatar } from "./Avatar";
 import { DisclaimerBanner } from "./DisclaimerBanner";
 import { Button } from "../ui/button";
 import { useSession } from "../../context/SessionContext";
@@ -35,23 +35,36 @@ export function Layout() {
             </Link>
           </div>
 
+          {account && (
+            <Link
+              to="/"
+              title="Accueil"
+              aria-label="Accueil"
+              className="flex items-center justify-center size-9 rounded-full border border-white/20 text-white hover:bg-white/10 transition-colors"
+            >
+              <Home className="size-4" />
+            </Link>
+          )}
+
           {account?.type === "referent" ? (
             <button
               type="button"
               onClick={() => navigate("/insights")}
-              className="flex items-center gap-2 rounded-full pl-1 pr-3 py-1 border border-white/20 hover:bg-white/10 transition-colors"
+              title="RePair Insights — statistiques"
+              aria-label="RePair Insights — statistiques"
+              className="flex items-center justify-center size-9 rounded-full border border-white/20 text-white hover:bg-white/10 transition-colors"
             >
-              <Avatar pseudonyme={account.pseudonyme} size={28} />
-              <span className="text-sm font-semibold text-white">RePair Insights</span>
+              <BarChart3 className="size-4" />
             </button>
           ) : account ? (
             <button
               type="button"
               onClick={() => navigate("/questionnaire")}
-              className="flex items-center gap-2 rounded-full pl-1 pr-3 py-1 border border-white/20 hover:bg-white/10 transition-colors"
+              title="Mon profil"
+              aria-label="Mon profil"
+              className="flex items-center justify-center size-9 rounded-full border border-white/20 text-white hover:bg-white/10 transition-colors"
             >
-              <Avatar pseudonyme={account.pseudonyme} size={28} />
-              <span className="text-sm font-semibold text-white">Mon profil</span>
+              <User className="size-4" />
             </button>
           ) : (
             <Button size="sm" className="rounded-2xl bg-white text-primary hover:bg-white/90" onClick={() => navigate("/creer-un-compte")}>

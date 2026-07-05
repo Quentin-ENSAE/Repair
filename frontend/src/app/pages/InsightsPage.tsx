@@ -1,8 +1,12 @@
 import { Sparkles } from "lucide-react";
 import { StatCard } from "../components/insights/StatCard";
-import { AgeHistogram, DifficultesBarChart, TroublesDonutChart } from "../components/insights/InsightsCharts";
+import {
+  AgeHistogram,
+  BesoinsAccompagnementChart,
+  TroublesDonutChart,
+} from "../components/insights/InsightsCharts";
 import { RecommendationCard } from "../components/insights/RecommendationCard";
-import { KPIS_EFFECTIFS, KPIS_RESULTATS } from "../data/dashboardData";
+import { KPIS } from "../data/dashboardData";
 import { RECOMMANDATIONS } from "../data/recommendations";
 
 export function InsightsPage() {
@@ -21,29 +25,18 @@ export function InsightsPage() {
           </p>
         </div>
 
-        <div className="flex flex-col gap-4">
-          <p className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Vue d'ensemble</p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {KPIS_EFFECTIFS.map((stat) => (
-              <StatCard key={stat.label} stat={stat} />
-            ))}
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {KPIS.map((stat) => (
+            <StatCard key={stat.label} stat={stat} />
+          ))}
         </div>
 
-        <div className="flex flex-col gap-4">
-          <p className="text-sm font-bold uppercase tracking-wide text-muted-foreground">Résultats du dispositif</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {KPIS_RESULTATS.map((stat) => (
-              <StatCard key={stat.label} stat={stat} />
-            ))}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <TroublesDonutChart />
-          <DifficultesBarChart />
           <AgeHistogram />
         </div>
+
+        <BesoinsAccompagnementChart />
 
         <p className="text-sm text-muted-foreground italic text-center -mt-4">
           Toutes les données affichées sur cette page sont simulées à des fins de démonstration.

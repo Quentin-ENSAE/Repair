@@ -5,11 +5,7 @@ import {
   AccompagnantProfile,
   Anciennete,
   ANCIENNETES,
-  CentreInteret,
-  CENTRES_INTERET,
   DESCRIPTIONS_TYPE_ACCOMPAGNEMENT,
-  Langue,
-  LANGUES,
   Modalite,
   MODALITES,
   MomentJournee,
@@ -63,8 +59,6 @@ export function AccompagnantQuestionnaire({
     existingProfile?.commentProchesDecriraient ?? "",
   );
   const [passionsInterets, setPassionsInterets] = useState(existingProfile?.passionsInterets ?? "");
-  const [centresInteret, setCentresInteret] = useState<CentreInteret[]>(existingProfile?.centresInteret ?? []);
-  const [langues, setLangues] = useState<Langue[]>(existingProfile?.langues ?? []);
 
   const [lienHandicapSensibilisation, setLienHandicapSensibilisation] = useState(
     existingProfile?.lienHandicapSensibilisation ?? "",
@@ -101,8 +95,6 @@ export function AccompagnantQuestionnaire({
       if (!quiEtesVous.trim() || !quotidien.trim() || !commentProchesDecriraient.trim() || !passionsInterets.trim()) {
         return "Merci de compléter les 4 questions de la section \"Faisons connaissance\".";
       }
-      if (centresInteret.length === 0) return "Merci de sélectionner au moins un centre d'intérêt.";
-      if (langues.length === 0) return "Merci de sélectionner au moins une langue.";
     }
     if (step === 1) {
       if (!lienHandicapSensibilisation.trim() || !aideForme.trim() || !limites.trim() || !typePersonneAlaise.trim()) {
@@ -148,8 +140,6 @@ export function AccompagnantQuestionnaire({
       quotidien: quotidien.trim(),
       commentProchesDecriraient: commentProchesDecriraient.trim(),
       passionsInterets: passionsInterets.trim(),
-      centresInteret,
-      langues,
       lienHandicapSensibilisation: lienHandicapSensibilisation.trim(),
       aideForme: aideForme.trim(),
       limites: limites.trim(),
@@ -248,20 +238,6 @@ export function AccompagnantQuestionnaire({
                   rows={3}
                 />
               </div>
-              <CheckboxGroupField
-                idPrefix="interet"
-                label="Centres d'intérêt"
-                options={CENTRES_INTERET}
-                values={centresInteret}
-                onChange={setCentresInteret}
-              />
-              <CheckboxGroupField
-                idPrefix="langue"
-                label="Quelles langues parlez-vous ?"
-                options={LANGUES}
-                values={langues}
-                onChange={setLangues}
-              />
             </>
           )}
 

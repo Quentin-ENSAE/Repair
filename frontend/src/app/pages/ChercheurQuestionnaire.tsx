@@ -2,16 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useSession } from "../context/SessionContext";
 import {
-  CentreInteret,
-  CENTRES_INTERET,
   ChercheurProfile,
   ConcerneQui,
   CONCERNE_QUI,
   DESCRIPTIONS_TYPE_ACCOMPAGNEMENT,
   Frequence,
   FREQUENCES,
-  Langue,
-  LANGUES,
   Modalite,
   MODALITES,
   NIVEAUX_BIEN_ETRE,
@@ -63,8 +59,6 @@ export function ChercheurQuestionnaire({
     existingProfile?.commentProchesDecriraient ?? "",
   );
   const [passionsInterets, setPassionsInterets] = useState(existingProfile?.passionsInterets ?? "");
-  const [centresInteret, setCentresInteret] = useState<CentreInteret[]>(existingProfile?.centresInteret ?? []);
-  const [langues, setLangues] = useState<Langue[]>(existingProfile?.langues ?? []);
 
   const [lienHandicap, setLienHandicap] = useState(existingProfile?.lienHandicap ?? "");
   const [difficultesQuotidien, setDifficultesQuotidien] = useState(existingProfile?.difficultesQuotidien ?? "");
@@ -94,8 +88,6 @@ export function ChercheurQuestionnaire({
       if (!quiEtesVous.trim() || !quotidien.trim() || !commentProchesDecriraient.trim() || !passionsInterets.trim()) {
         return "Merci de compléter les 4 questions de la section \"Faisons connaissance\".";
       }
-      if (centresInteret.length === 0) return "Merci de sélectionner au moins un centre d'intérêt.";
-      if (langues.length === 0) return "Merci de sélectionner au moins une langue.";
     }
     if (step === 1) {
       if (!concerneQui) return "Merci d'indiquer qui est concerné par le handicap.";
@@ -156,8 +148,6 @@ export function ChercheurQuestionnaire({
       quotidien: quotidien.trim(),
       commentProchesDecriraient: commentProchesDecriraient.trim(),
       passionsInterets: passionsInterets.trim(),
-      centresInteret,
-      langues,
       lienHandicap: lienHandicap.trim(),
       difficultesQuotidien: difficultesQuotidien.trim(),
       reculStrategiesForces: reculStrategiesForces.trim(),
@@ -226,20 +216,6 @@ export function ChercheurQuestionnaire({
                   rows={3}
                 />
               </div>
-              <CheckboxGroupField
-                idPrefix="interet"
-                label="Centres d'intérêt"
-                options={CENTRES_INTERET}
-                values={centresInteret}
-                onChange={setCentresInteret}
-              />
-              <CheckboxGroupField
-                idPrefix="langue"
-                label="Quelles langues parlez-vous ?"
-                options={LANGUES}
-                values={langues}
-                onChange={setLangues}
-              />
             </>
           )}
 

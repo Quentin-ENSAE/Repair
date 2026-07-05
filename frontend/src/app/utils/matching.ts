@@ -2,11 +2,10 @@ import { AccompagnantProfile, BinomeRecommande, ChercheurProfile } from "../type
 
 // Stand-in front-end temporaire pour la démo : la majorité du profil est
 // maintenant en texte libre (matière pour l'IA / le message généré). Le score
-// et le radar reposent sur un mini-socle structuré volontairement conservé
-// (type d'accompagnement, intérêts, langues, modalités) pour rester fiables
-// et explicables, complété par une heuristique simple de lecture du texte
-// libre. Sera remplacé par un vrai moteur (embeddings + LLM) côté backend —
-// voir docs/TDD.md.
+// repose sur un mini-socle structuré volontairement conservé (type
+// d'accompagnement, modalités) pour rester fiable et explicable, complété par
+// une heuristique simple de lecture du texte libre. Sera remplacé par un vrai
+// moteur (embeddings + LLM) côté backend — voir docs/TDD.md.
 
 const MOTS_CLES_HANDICAP = [
   "handicap",
@@ -18,12 +17,6 @@ const MOTS_CLES_HANDICAP = [
   "dépression",
   "psychique",
 ];
-
-function overlapRatio<T>(a: T[], b: T[]): number {
-  if (a.length === 0) return 0;
-  const common = a.filter((v) => b.includes(v)).length;
-  return common / a.length;
-}
 
 function mentionneHandicap(texte: string): boolean {
   const t = texte.toLowerCase();
@@ -51,12 +44,10 @@ function scoreRichesse(chercheur: ChercheurProfile, accompagnant: AccompagnantPr
 export function computeScore(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): number {
   let score = 0;
 
-  if (matchType(chercheur, accompagnant)) score += 25;
-  score += 20 * overlapRatio(chercheur.centresInteret, accompagnant.centresInteret);
-  if (chercheur.langues.some((l) => accompagnant.langues.includes(l))) score += 15;
-  if (chercheur.modalitesSouhaitees.some((m) => accompagnant.modalitesProposees.includes(m))) score += 10;
-  if (matchSensibilite(chercheur, accompagnant)) score += 20;
-  score += 10 * scoreRichesse(chercheur, accompagnant);
+  if (matchType(chercheur, accompagnant)) score += 40;
+  if (chercheur.modalitesSouhaitees.some((m) => accompagnant.modalitesProposees.includes(m))) score += 15;
+  if (matchSensibilite(chercheur, accompagnant)) score += 30;
+  score += 15 * scoreRichesse(chercheur, accompagnant);
 
   return Math.round(Math.min(score, 100));
 }
@@ -69,11 +60,6 @@ export interface RadarPoint {
 export function getRadarData(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): RadarPoint[] {
   return [
     { critere: "Type", valeur: matchType(chercheur, accompagnant) ? 100 : 0 },
-    {
-      critere: "Intérêts",
-      valeur: Math.round(100 * overlapRatio(chercheur.centresInteret, accompagnant.centresInteret)),
-    },
-    { critere: "Langue", valeur: chercheur.langues.some((l) => accompagnant.langues.includes(l)) ? 100 : 0 },
     {
       critere: "Modalités",
       valeur: chercheur.modalitesSouhaitees.some((m) => accompagnant.modalitesProposees.includes(m)) ? 100 : 0,
@@ -90,10 +76,6 @@ export function getMatchPoints(chercheur: ChercheurProfile, accompagnant: Accomp
 
   if (matchType(chercheur, accompagnant)) points.push(`Type recherché : ${chercheur.typeAccompagnementSouhaite}`);
 
-  const interetsCommuns = chercheur.centresInteret.filter((i) => accompagnant.centresInteret.includes(i));
-  if (interetsCommuns.length > 0) points.push(`Intérêts communs (${interetsCommuns.join(", ")})`);
-
-  if (chercheur.langues.some((l) => accompagnant.langues.includes(l))) points.push("Langue commune");
   if (chercheur.modalitesSouhaitees.some((m) => accompagnant.modalitesProposees.includes(m))) {
     points.push("Modalité compatible");
   }
@@ -110,11 +92,6 @@ export function generateExplication(chercheur: ChercheurProfile, accompagnant: A
     phrases.push(`${accompagnant.pseudonyme} propose justement un accompagnement de type "${chercheur.typeAccompagnementSouhaite}".`);
   }
 
-  const interetsCommuns = chercheur.centresInteret.filter((i) => accompagnant.centresInteret.includes(i));
-  if (interetsCommuns.length > 0) {
-    phrases.push(`Vous partagez un intérêt commun pour ${interetsCommuns[0]}.`);
-  }
-
   if (matchSensibilite(chercheur, accompagnant)) {
     phrases.push(`${accompagnant.pseudonyme} est sensibilisé·e à ce que vous traversez : "${accompagnant.lienHandicapSensibilisation}"`);
   }
@@ -125,16 +102,9 @@ export function generateExplication(chercheur: ChercheurProfile, accompagnant: A
 }
 
 export function generateMessageContact(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): string {
-  const interetsCommuns = chercheur.centresInteret.filter((i) => accompagnant.centresInteret.includes(i));
-
   const phrases = [`Bonjour ${accompagnant.pseudonyme},`];
   phrases.push(`Je m'appelle ${chercheur.pseudonyme}. ${chercheur.quiEtesVous}`);
   phrases.push(chercheur.aideBinome);
-
-  if (interetsCommuns.length > 0) {
-    phrases.push(`On partage aussi un intérêt pour ${interetsCommuns[0]}, ce qui pourrait faciliter la prise de contact.`);
-  }
-
   phrases.push(chercheur.binomeIdeal);
   phrases.push("Au plaisir d'échanger avec vous.");
 

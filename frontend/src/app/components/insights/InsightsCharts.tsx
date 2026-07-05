@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { DIFFICULTES_RENCONTREES, REPARTITION_AGE, REPARTITION_TROUBLES } from "../../data/dashboardData";
+import { BESOINS_ACCOMPAGNEMENT, REPARTITION_AGE, REPARTITION_TROUBLES } from "../../data/dashboardData";
 
 const DONUT_COLORS = [
   "var(--chart-1)",
@@ -74,22 +74,22 @@ export function TroublesDonutChart() {
   );
 }
 
-export function DifficultesBarChart() {
+export function BesoinsAccompagnementChart() {
   return (
     <Card className="rounded-2xl shadow-lg border-none">
       <CardHeader>
-        <CardTitle className="text-xl font-bold text-primary">Difficultés les plus rencontrées</CardTitle>
+        <CardTitle className="text-xl font-bold text-primary">Principaux besoins d'accompagnement</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-64 w-full">
+        <div className="h-[420px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={DIFFICULTES_RENCONTREES} layout="vertical" margin={{ left: 8 }}>
+            <BarChart data={BESOINS_ACCOMPAGNEMENT} layout="vertical" margin={{ left: 8 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
               <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
               <YAxis
                 type="category"
                 dataKey="name"
-                width={140}
+                width={260}
                 tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
               />
               <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "var(--muted)" }} />

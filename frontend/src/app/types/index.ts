@@ -17,23 +17,6 @@ export type TroublePsychique = (typeof TROUBLES_PSYCHIQUES)[number];
 export const ANCIENNETES = ["Moins de 6 mois", "6 mois à 2 ans", "2 à 5 ans", "Plus de 5 ans"] as const;
 export type Anciennete = (typeof ANCIENNETES)[number];
 
-export const CENTRES_INTERET = [
-  "Sport",
-  "Musique",
-  "Lecture",
-  "Cinéma",
-  "Cuisine",
-  "Jeux vidéo",
-  "Voyages",
-  "Animaux",
-  "Art",
-  "Technologie",
-] as const;
-export type CentreInteret = (typeof CENTRES_INTERET)[number];
-
-export const LANGUES = ["Français", "Anglais", "Arabe", "Espagnol", "Autre"] as const;
-export type Langue = (typeof LANGUES)[number];
-
 export const FREQUENCES = ["Échange ponctuel", "Accompagnement régulier"] as const;
 export type Frequence = (typeof FREQUENCES)[number];
 
@@ -94,8 +77,7 @@ export type NiveauBienEtre = 1 | 2 | 3 | 4 | 5;
 /**
  * Étape 1 — commune aux deux profils : diagnostic éventuel + "Faisons
  * connaissance" (questions ouvertes, matière première du message/de
- * l'explication IA, complétées par un mini-socle structuré — intérêts,
- * langues — qui alimente le score de compatibilité de façon fiable).
+ * l'explication IA).
  */
 export interface EtapeCommune {
   diagnosticPose: boolean;
@@ -107,8 +89,6 @@ export interface EtapeCommune {
   quotidien: string;
   commentProchesDecriraient: string;
   passionsInterets: string;
-  centresInteret: CentreInteret[];
-  langues: Langue[];
 }
 
 export interface ChercheurProfile extends EtapeCommune {

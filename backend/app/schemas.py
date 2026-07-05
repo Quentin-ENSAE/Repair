@@ -11,8 +11,6 @@ class ChercheurInput(BaseModel):
     quotidien: str = ""
     commentProchesDecriraient: str = ""
     passionsInterets: str = ""
-    centresInteret: List[str] = []
-    langues: List[str] = []
     concerneQui: str = ""
     typeHandicap: List[str] = []
     savoirHandicap: str = ""
@@ -35,8 +33,6 @@ class AccompagnantInput(BaseModel):
     quotidien: str = ""
     commentProchesDecriraient: str = ""
     passionsInterets: str = ""
-    centresInteret: List[str] = []
-    langues: List[str] = []
     lienHandicapSensibilisation: str = ""
     aideForme: str = ""
     limites: str = ""

@@ -1,4 +1,4 @@
-import { Building2, Clock, Handshake, HeartHandshake, Users } from "lucide-react";
+import { Building2, HeartHandshake, TrendingUp, Users } from "lucide-react";
 
 // Données simulées pour le POC "RePair Insights" — structure pensée pour être
 // remplacée telle quelle par un appel API plus tard (même formes de données).
@@ -13,8 +13,7 @@ export interface KpiStat {
   icon: typeof Users;
 }
 
-// Vue d'ensemble des effectifs concernés par le dispositif.
-export const KPIS_EFFECTIFS: KpiStat[] = [
+export const KPIS: KpiStat[] = [
   {
     label: "Collaborateurs de l'entreprise",
     value: "3 000",
@@ -33,21 +32,11 @@ export const KPIS_EFFECTIFS: KpiStat[] = [
     trend: "+12 ce trimestre",
     icon: HeartHandshake,
   },
-];
-
-// Résultats concrets du dispositif de mise en relation.
-export const KPIS_RESULTATS: KpiStat[] = [
   {
-    label: "Binômes créés",
-    value: "38",
-    trend: "+5 ce mois-ci",
-    icon: Handshake,
-  },
-  {
-    label: "Délai moyen avant mise en binôme",
-    value: "6 jours",
-    trend: "-2 jours vs trimestre précédent",
-    icon: Clock,
+    label: "Taux de mise en relation",
+    value: "76 %",
+    trend: "+5 pts ce mois-ci",
+    icon: TrendingUp,
   },
 ];
 
@@ -65,13 +54,19 @@ export const REPARTITION_TROUBLES: RepartitionItem[] = [
   { name: "TSA", value: 6 },
 ];
 
-export const DIFFICULTES_RENCONTREES: RepartitionItem[] = [
-  { name: "Gestion des émotions", value: 42 },
-  { name: "Retour au travail", value: 35 },
-  { name: "Isolement", value: 30 },
-  { name: "Confiance en soi", value: 27 },
-  { name: "Communication", value: 21 },
-  { name: "Organisation quotidienne", value: 18 },
+// Besoins d'accompagnement exprimés par les collaborateurs accompagnés,
+// avec des intitulés concrets et orientés entreprise.
+export const BESOINS_ACCOMPAGNEMENT: RepartitionItem[] = [
+  { name: "Retour au travail après un arrêt", value: 38 },
+  { name: "Gestion du stress professionnel", value: 34 },
+  { name: "Charge mentale", value: 30 },
+  { name: "Fatigue psychique", value: 27 },
+  { name: "Difficulté à communiquer avec son manager", value: 25 },
+  { name: "Organisation et priorisation", value: 22 },
+  { name: "Perte de confiance au travail", value: 19 },
+  { name: "Difficulté à demander de l'aide", value: 17 },
+  { name: "Intégration dans l'équipe", value: 14 },
+  { name: "Équilibre vie professionnelle / vie personnelle", value: 12 },
 ];
 
 export interface RepartitionAgeItem {

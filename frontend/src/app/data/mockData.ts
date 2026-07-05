@@ -24,8 +24,6 @@ export const MOCK_CHERCHEURS: ChercheurProfile[] = [
       "Mes proches diraient que je suis sensible, sérieuse et toujours là pour les autres. Ils diraient aussi que je garde trop les choses pour moi.",
     passionsInterets:
       "J'aimerais parler de livres, de musique, de films ou simplement de choses légères pour ne pas être uniquement dans le diagnostic.",
-    centresInteret: ["Lecture", "Musique", "Cinéma", "Voyages"],
-    langues: ["Français"],
     lienHandicap:
       "Je viens d'être diagnostiquée avec un trouble bipolaire. C'est encore très récent et je ne sais pas vraiment comment en parler autour de moi.",
     difficultesQuotidien:
@@ -65,8 +63,6 @@ export const MOCK_CHERCHEURS: ChercheurProfile[] = [
       "On me décrit comme fiable, gentil et intelligent, mais aussi comme quelqu'un qui anticipe trop et qui se met beaucoup de pression.",
     passionsInterets:
       "J'aimerais partager autour de jeux vidéo, de sport, de tech ou de séries. Des sujets simples peuvent aider à créer le lien.",
-    centresInteret: ["Technologie", "Jeux vidéo", "Sport", "Cinéma"],
-    langues: ["Français", "Anglais"],
     lienHandicap:
       "Je vis avec un trouble anxieux diagnostiqué depuis plusieurs années. Je fonctionne, mais je sens que l'anxiété limite encore beaucoup mes choix.",
     difficultesQuotidien:
@@ -104,8 +100,6 @@ export const MOCK_CHERCHEURS: ChercheurProfile[] = [
       "Mes proches disent que je suis drôle, créative et pleine d'idées, mais que je m'éparpille vite et que je manque de régularité.",
     passionsInterets:
       "J'aimerais échanger avec quelqu'un qui aime la musique, l'art ou les jeux vidéo et qui comprend le fait d'avoir mille idées en même temps.",
-    centresInteret: ["Musique", "Art", "Jeux vidéo", "Technologie"],
-    langues: ["Français", "Arabe"],
     lienHandicap:
       "Un professionnel m'a récemment parlé de TDAH. Je suis soulagée d'avoir une explication, mais je ne sais pas encore comment m'organiser autrement.",
     difficultesQuotidien:
@@ -141,8 +135,6 @@ export const MOCK_CHERCHEURS: ChercheurProfile[] = [
     commentProchesDecriraient:
       "Mes proches me décriraient comme généreuse, responsable et très sensible. Ils savent aussi que je demande rarement de l'aide avant d'être épuisée.",
     passionsInterets: "J'aimerais parler cuisine, animaux, cinéma ou parentalité sans forcément tout centrer sur la maladie.",
-    centresInteret: ["Cuisine", "Animaux", "Cinéma", "Lecture"],
-    langues: ["Français", "Espagnol"],
     lienHandicap:
       "Je vis avec une dépression chronique depuis plusieurs années. Je suis suivie, mais j'ai parfois le sentiment d'être seule dans la durée.",
     difficultesQuotidien:
@@ -179,8 +171,6 @@ export const MOCK_CHERCHEURS: ChercheurProfile[] = [
       "Mes proches diraient que je suis courageux, calme et loyal. Ils diraient aussi que je doute beaucoup de ma place dans les groupes.",
     passionsInterets:
       "J'aimerais parler cuisine, musique, marche ou reprise d'activité avec quelqu'un qui connaît la peur du regard des autres.",
-    centresInteret: ["Cuisine", "Musique", "Sport", "Voyages"],
-    langues: ["Français"],
     lienHandicap:
       "Je vis avec une schizophrénie stabilisée. Je suis suivi, mais j'ai encore du mal à croire que je peux reprendre une vie sociale normale.",
     difficultesQuotidien:
@@ -216,8 +206,6 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     commentProchesDecriraient:
       "Mes proches disent que je suis patiente, rassurante et concrète. Mon défaut est que je peux parfois trop vouloir protéger les autres.",
     passionsInterets: "J'aime parler cuisine, nature, animaux et petites habitudes qui aident à garder un équilibre.",
-    centresInteret: ["Cuisine", "Animaux", "Lecture", "Sport"],
-    langues: ["Français", "Arabe"],
     lienHandicapSensibilisation:
       "Je vis avec un trouble bipolaire depuis longtemps. J'ai connu un diagnostic difficile, puis un parcours de stabilisation avec du suivi, des ajustements et beaucoup d'apprentissage personnel.",
     aideForme:
@@ -245,8 +233,6 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     quotidien: "Je travaille comme technicien informatique. J'ai un quotidien assez structuré, ce qui m'aide à gérer l'anxiété.",
     commentProchesDecriraient: "On me décrit comme fiable, posé et pragmatique. Je suis parfois trop perfectionniste.",
     passionsInterets: "J'aime parler technologie, musique, marche et organisation du quotidien.",
-    centresInteret: ["Technologie", "Musique", "Sport", "Cinéma"],
-    langues: ["Français", "Anglais"],
     lienHandicapSensibilisation:
       "J'ai vécu plusieurs années avec un trouble anxieux important. J'ai appris à mieux gérer les anticipations, les évitements et les périodes de surcharge.",
     aideForme:
@@ -272,8 +258,6 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     quotidien: "Je travaille dans la communication en télétravail. Je garde un rythme volontairement simple pour préserver mon énergie.",
     commentProchesDecriraient: "Mes proches me trouvent douce, attentive et honnête, mais parfois trop dure avec moi-même.",
     passionsInterets: "J'aimerais partager l'art, la musique, les films et les discussions tranquilles.",
-    centresInteret: ["Art", "Musique", "Cinéma", "Lecture"],
-    langues: ["Français"],
     lienHandicapSensibilisation:
       "J'ai traversé plusieurs épisodes dépressifs et un long travail de rétablissement. J'ai aussi accompagné une amie dans son propre parcours.",
     aideForme:
@@ -299,8 +283,6 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     quotidien: "Je suis développeur junior. J'alterne entre périodes très productives et moments où je dois me recadrer.",
     commentProchesDecriraient: "Mes proches disent que je suis drôle, spontané et créatif. Ils disent aussi que je pars parfois trop vite dans tous les sens.",
     passionsInterets: "Je peux facilement parler tech, jeux vidéo, sport et méthodes pour mieux s'organiser.",
-    centresInteret: ["Technologie", "Jeux vidéo", "Sport", "Musique"],
-    langues: ["Français", "Anglais", "Arabe"],
     lienHandicapSensibilisation:
       "J'ai été diagnostiqué TDAH adulte. J'ai dû apprendre à organiser mon travail autrement et à accepter un fonctionnement différent.",
     aideForme: "Je peux aider sur l'organisation du quotidien, la reprise d'études ou de travail, et partager des méthodes simples sans culpabiliser.",
@@ -325,8 +307,6 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     quotidien: "Je travaille dans l'administration. Mon quotidien est stable, avec des routines qui me rassurent sans me fermer aux autres.",
     commentProchesDecriraient: "On me décrit comme fiable, prudente et bienveillante. Mon défaut est que j'ai parfois peur de déranger.",
     passionsInterets: "J'aime parler lecture, cuisine, voyages et techniques pour retrouver un peu de souplesse dans la journée.",
-    centresInteret: ["Lecture", "Cuisine", "Voyages", "Animaux"],
-    langues: ["Français", "Espagnol"],
     lienHandicapSensibilisation:
       "J'ai vécu avec des TOC et une anxiété forte pendant plusieurs années. J'ai appris à demander de l'aide et à ne pas rester seule avec les pensées répétitives.",
     aideForme: "Je peux écouter, rassurer et partager comment j'ai appris à distinguer ce qui m'aide vraiment de ce qui alimente l'anxiété.",
@@ -351,8 +331,6 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     quotidien: "Je travaille comme éducateur sportif. Le cadre, le mouvement et la régularité m'ont beaucoup aidé.",
     commentProchesDecriraient: "Mes proches me décrivent comme loyal, direct et protecteur. Je peux parfois être trop franc, mais toujours avec respect.",
     passionsInterets: "J'aime parler sport, animaux, cinéma et confiance en soi.",
-    centresInteret: ["Sport", "Animaux", "Cinéma", "Musique"],
-    langues: ["Français"],
     lienHandicapSensibilisation:
       "J'ai longtemps eu des difficultés relationnelles et émotionnelles liées à un trouble borderline. Avec du suivi et du temps, j'ai appris à poser mes limites.",
     aideForme: "Je peux accompagner sur la gestion des émotions, la confiance, les relations et le fait d'apprendre à ne pas tout vivre dans l'urgence.",
@@ -377,8 +355,6 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     quotidien: "Je travaille en bibliothèque. J'aime les environnements prévisibles, mais j'essaie aussi de garder du lien social à mon rythme.",
     commentProchesDecriraient: "Mes proches disent que je suis sincère, précise et loyale. Je peux sembler distante au début, mais c'est surtout que j'ai besoin de temps.",
     passionsInterets: "J'aimerais partager les jeux vidéo, les animaux, la lecture et les routines qui aident à se sentir en sécurité.",
-    centresInteret: ["Animaux", "Jeux vidéo", "Lecture", "Art"],
-    langues: ["Français", "Anglais"],
     lienHandicapSensibilisation: "Je suis concernée par un TSA. J'ai connu beaucoup de fatigue sociale et de difficultés à expliquer mes besoins aux autres.",
     aideForme: "Je peux aider quelqu'un à parler d'adaptation, de surcharge, de vie sociale à son rythme et de stratégies pour préserver son énergie.",
     limites: "Je préfère éviter les échanges très imprévus ou trop fréquents. J'ai besoin que le cadre soit clair.",
@@ -402,8 +378,6 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     quotidien: "Je suis en emploi accompagné depuis plusieurs années. Mon quotidien est stable, avec des habitudes qui me permettent de garder mon équilibre.",
     commentProchesDecriraient: "Mes proches disent que je suis courageux, calme et attentif. Je suis parfois réservé avec les nouvelles personnes.",
     passionsInterets: "Je peux partager autour de la cuisine, des voyages, de la famille et de la reprise de confiance.",
-    centresInteret: ["Cuisine", "Voyages", "Lecture", "Sport"],
-    langues: ["Français", "Arabe"],
     lienHandicapSensibilisation:
       "Je vis avec une schizophrénie stabilisée. J'ai connu des hospitalisations plus jeune, puis un long travail pour reprendre confiance et retrouver une place sociale.",
     aideForme: "Je peux témoigner sur la stabilisation, l'emploi accompagné, l'importance de la routine et le fait de ne pas se définir uniquement par son diagnostic.",
@@ -428,8 +402,6 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     quotidien: "Je travaille à temps partiel dans un atelier associatif. J'ai appris à composer avec des hauts et des bas sans m'isoler complètement.",
     commentProchesDecriraient: "On me décrit comme douce, courageuse et à l'écoute. Je peux parfois avoir besoin de me retirer pour récupérer.",
     passionsInterets: "J'aime partager autour de l'art, de la musique, des animaux et des routines qui soutiennent le moral.",
-    centresInteret: ["Art", "Musique", "Animaux", "Lecture"],
-    langues: ["Français"],
     lienHandicapSensibilisation:
       "Je vis avec un trouble schizo-affectif stabilisé. J'ai appris à mieux comprendre mes signes d'alerte et à m'entourer de personnes ressources.",
     aideForme: "Je peux accompagner sur l'acceptation du diagnostic, les périodes de doute, l'isolement et la reconstruction progressive du quotidien.",
@@ -453,8 +425,6 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     quotidien: "Je suis retraité d'un métier d'accompagnement social. Aujourd'hui j'ai du temps disponible pour aider bénévolement.",
     commentProchesDecriraient: "Mes proches me décrivent comme calme, fiable et rassurant. J'ai parfois tendance à vouloir trop bien faire.",
     passionsInterets: "Je peux partager des discussions autour du cinéma, de la lecture, des voyages et de la vie quotidienne.",
-    centresInteret: ["Lecture", "Cinéma", "Voyages", "Cuisine"],
-    langues: ["Français", "Anglais"],
     lienHandicapSensibilisation:
       "Je n'ai pas de diagnostic personnel, mais j'ai travaillé longtemps auprès de personnes fragilisées psychiquement et j'ai été formé à l'écoute active dans un cadre associatif.",
     aideForme:
@@ -480,8 +450,6 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     quotidien: "Je suis en reprise d'études après une pause. J'essaie de garder un équilibre entre mes cours, le repos et mes amis proches.",
     commentProchesDecriraient: "Mes proches disent que je suis empathique, créative et attentive. Mon petit défaut est de douter souvent de moi.",
     passionsInterets: "J'aime parler écriture, musique, animaux, séries et petits projets personnels.",
-    centresInteret: ["Musique", "Animaux", "Art", "Cinéma"],
-    langues: ["Français", "Arabe"],
     lienHandicapSensibilisation: "J'ai connu anxiété et dépression pendant mes études. J'ai dû apprendre à demander de l'aide et à reprendre progressivement un rythme.",
     aideForme: "Je peux accompagner une personne qui reprend les études, qui a peur d'échouer ou qui cherche à retrouver confiance après une pause.",
     limites: "Je ne souhaite pas accompagner des situations de crise ou de forte urgence émotionnelle. Je préfère un échange posé et constructif.",
@@ -505,8 +473,6 @@ export const MOCK_ACCOMPAGNANTS: AccompagnantProfile[] = [
     quotidien: "Je suis cadre dans une PME avec un rythme aménagé. Je fais attention à mon sommeil et à mon niveau de stress.",
     commentProchesDecriraient: "Mes proches me décrivent comme optimiste, engagé et franc. Je peux parfois être impatient quand les choses n'avancent pas.",
     passionsInterets: "J'aime parler sport, cuisine, voyages et équilibre de vie au travail.",
-    centresInteret: ["Sport", "Cuisine", "Voyages", "Technologie"],
-    langues: ["Français", "Anglais"],
     lienHandicapSensibilisation:
       "J'ai traversé un diagnostic de trouble bipolaire il y a plus de dix ans et j'ai dû reconstruire mon rapport au travail et à l'ambition.",
     aideForme: "Je peux aider sur la reprise professionnelle, la gestion du rythme, la peur du regard au travail et le maintien d'un équilibre durable.",
