@@ -8,6 +8,8 @@ import { QuestionnairePage } from "./pages/QuestionnairePage";
 import { RecommendationsPage } from "./pages/RecommendationsPage";
 import { BinomeProfilePage } from "./pages/BinomeProfilePage";
 import { AllAccompagnantsPage } from "./pages/AllAccompagnantsPage";
+import { InsightsPage } from "./pages/InsightsPage";
+import { RequireReferent } from "./components/layout/RequireReferent";
 
 export default function App() {
   return (
@@ -21,6 +23,14 @@ export default function App() {
             <Route path="/recommandations" element={<RecommendationsPage />} />
             <Route path="/binomes/:id" element={<BinomeProfilePage />} />
             <Route path="/accompagnants" element={<AllAccompagnantsPage />} />
+            <Route
+              path="/insights"
+              element={
+                <RequireReferent>
+                  <InsightsPage />
+                </RequireReferent>
+              }
+            />
           </Route>
         </Routes>
       </HashRouter>

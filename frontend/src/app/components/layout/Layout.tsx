@@ -35,7 +35,16 @@ export function Layout() {
             </Link>
           </div>
 
-          {account ? (
+          {account?.type === "referent" ? (
+            <button
+              type="button"
+              onClick={() => navigate("/insights")}
+              className="flex items-center gap-2 rounded-full pl-1 pr-3 py-1 border border-white/20 hover:bg-white/10 transition-colors"
+            >
+              <Avatar pseudonyme={account.pseudonyme} size={28} />
+              <span className="text-sm font-semibold text-white">RePair Insights</span>
+            </button>
+          ) : account ? (
             <button
               type="button"
               onClick={() => navigate("/questionnaire")}

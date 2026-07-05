@@ -1,4 +1,4 @@
-export type AccountType = "chercheur" | "accompagnant";
+export type AccountType = "chercheur" | "accompagnant" | "referent";
 
 export const TROUBLES_PSYCHIQUES = [
   "Trouble bipolaire",

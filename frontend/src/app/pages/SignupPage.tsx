@@ -40,7 +40,7 @@ export function SignupPage() {
       return;
     }
     setAccount({ type: accountType as AccountType, pseudonyme: pseudonyme.trim(), age: ageNum });
-    navigate("/questionnaire");
+    navigate(accountType === "referent" ? "/insights" : "/questionnaire");
   }
 
   return (
@@ -64,6 +64,12 @@ export function SignupPage() {
                     <RadioGroupItem value="accompagnant" id="type-accompagnant" />
                     <Label htmlFor="type-accompagnant" className="font-normal">
                       Je souhaite accompagner une personne
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem value="referent" id="type-referent" />
+                    <Label htmlFor="type-referent" className="font-normal">
+                      Je suis Référent Handicap / RH
                     </Label>
                   </div>
                 </RadioGroup>
