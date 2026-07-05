@@ -4,8 +4,10 @@ import { AccompagnantProfile, BinomeRecommande, ChercheurProfile } from "../type
 // maintenant en texte libre (matière pour l'IA / le message généré). Le score
 // repose sur un mini-socle structuré volontairement conservé (type
 // d'accompagnement, modalités) pour rester fiable et explicable, complété par
-// une heuristique simple de lecture du texte libre. Sera remplacé par un vrai
-// moteur (embeddings + LLM) côté backend — voir docs/TDD.md.
+// une heuristique simple de lecture du texte libre. Les critères "Sensibilité"
+// et "Richesse" sont gradués (pas binaires) pour éviter les scores identiques
+// entre profils. Sera remplacé par un vrai moteur (embeddings + LLM) côté
+// backend — voir docs/TDD.md.
 
 const MOTS_CLES_HANDICAP = [
   "handicap",
@@ -18,35 +20,52 @@ const MOTS_CLES_HANDICAP = [
   "psychique",
 ];
 
-function mentionneHandicap(texte: string): boolean {
+function nombreMotsClesHandicap(texte: string): number {
   const t = texte.toLowerCase();
-  return MOTS_CLES_HANDICAP.some((mot) => t.includes(mot));
+  return MOTS_CLES_HANDICAP.filter((mot) => t.includes(mot)).length;
 }
 
-function estSubstantiel(texte: string, seuil = 15): boolean {
-  return texte.trim().length >= seuil;
+function tronquer(texte: string, maxCaracteres: number): string {
+  const propre = texte.trim();
+  if (propre.length <= maxCaracteres) return propre;
+  const coupe = propre.slice(0, maxCaracteres);
+  const dernierEspace = coupe.lastIndexOf(" ");
+  return `${coupe.slice(0, dernierEspace > 0 ? dernierEspace : maxCaracteres)}...`;
 }
 
 function matchType(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): boolean {
   return accompagnant.typesAccompagnementProposes.includes(chercheur.typeAccompagnementSouhaite);
 }
 
-function matchSensibilite(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): boolean {
-  return chercheur.diagnosticPose && mentionneHandicap(accompagnant.lienHandicapSensibilisation);
+function modaliteCommune(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): string | undefined {
+  return chercheur.modalitesSouhaitees.find((m) => accompagnant.modalitesProposees.includes(m));
 }
 
+// 0 à 1 : gradué selon le nombre de mots-clés liés au handicap détectés dans
+// le texte de sensibilisation de l'accompagnant (0, 1 ou 2+ occurrences).
+function scoreSensibilite(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): number {
+  if (!chercheur.diagnosticPose) return 0;
+  return Math.min(1, nombreMotsClesHandicap(accompagnant.lienHandicapSensibilisation) / 2);
+}
+
+// 0 à 1 : gradué selon la richesse combinée des textes libres des deux
+// profils (plus les deux personnes se sont exprimées en détail, plus
+// l'échange a de matière).
 function scoreRichesse(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): number {
-  const chercheurOk = estSubstantiel(chercheur.aideBinome) && estSubstantiel(chercheur.lienHandicap);
-  const accompagnantOk = estSubstantiel(accompagnant.aideForme) && estSubstantiel(accompagnant.motivation);
-  return chercheurOk && accompagnantOk ? 1 : 0;
+  const longueur =
+    chercheur.aideBinome.trim().length +
+    chercheur.lienHandicap.trim().length +
+    accompagnant.aideForme.trim().length +
+    accompagnant.motivation.trim().length;
+  return Math.min(1, longueur / 400);
 }
 
 export function computeScore(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): number {
   let score = 0;
 
   if (matchType(chercheur, accompagnant)) score += 40;
-  if (chercheur.modalitesSouhaitees.some((m) => accompagnant.modalitesProposees.includes(m))) score += 15;
-  if (matchSensibilite(chercheur, accompagnant)) score += 30;
+  if (modaliteCommune(chercheur, accompagnant)) score += 15;
+  score += 30 * scoreSensibilite(chercheur, accompagnant);
   score += 15 * scoreRichesse(chercheur, accompagnant);
 
   return Math.round(Math.min(score, 100));
@@ -60,12 +79,9 @@ export interface RadarPoint {
 export function getRadarData(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): RadarPoint[] {
   return [
     { critere: "Type", valeur: matchType(chercheur, accompagnant) ? 100 : 0 },
-    {
-      critere: "Modalités",
-      valeur: chercheur.modalitesSouhaitees.some((m) => accompagnant.modalitesProposees.includes(m)) ? 100 : 0,
-    },
-    { critere: "Sensibilité", valeur: matchSensibilite(chercheur, accompagnant) ? 100 : 0 },
-    { critere: "Richesse", valeur: scoreRichesse(chercheur, accompagnant) * 100 },
+    { critere: "Modalités", valeur: modaliteCommune(chercheur, accompagnant) ? 100 : 0 },
+    { critere: "Sensibilité", valeur: Math.round(100 * scoreSensibilite(chercheur, accompagnant)) },
+    { critere: "Richesse", valeur: Math.round(100 * scoreRichesse(chercheur, accompagnant)) },
   ];
 }
 
@@ -76,39 +92,46 @@ export function getMatchPoints(chercheur: ChercheurProfile, accompagnant: Accomp
 
   if (matchType(chercheur, accompagnant)) points.push(`Type recherché : ${chercheur.typeAccompagnementSouhaite}`);
 
-  if (chercheur.modalitesSouhaitees.some((m) => accompagnant.modalitesProposees.includes(m))) {
-    points.push("Modalité compatible");
-  }
-  if (matchSensibilite(chercheur, accompagnant)) points.push("Vécu comparable");
-  if (scoreRichesse(chercheur, accompagnant) === 1) points.push("Échange de qualité");
+  const modalite = modaliteCommune(chercheur, accompagnant);
+  if (modalite) points.push(`Modalité compatible (${modalite})`);
+
+  const sensibilite = scoreSensibilite(chercheur, accompagnant);
+  if (sensibilite >= 0.5) points.push("Vécu très comparable");
+  else if (sensibilite > 0) points.push("Vécu comparable");
+
+  if (scoreRichesse(chercheur, accompagnant) >= 0.6) points.push("Échange de qualité");
 
   return points;
 }
 
 export function generateExplication(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): string {
-  const phrases = [`Nous pensons que ${accompagnant.pseudonyme} pourrait bien vous correspondre.`];
+  const phrases: string[] = [];
 
   if (matchType(chercheur, accompagnant)) {
-    phrases.push(`${accompagnant.pseudonyme} propose justement un accompagnement de type "${chercheur.typeAccompagnementSouhaite}".`);
+    phrases.push(`${accompagnant.pseudonyme} propose un accompagnement de type "${chercheur.typeAccompagnementSouhaite}"`);
+  } else {
+    phrases.push(`${accompagnant.pseudonyme} pourrait bien vous correspondre`);
   }
 
-  if (matchSensibilite(chercheur, accompagnant)) {
-    phrases.push(`${accompagnant.pseudonyme} est sensibilisé·e à ce que vous traversez : "${accompagnant.lienHandicapSensibilisation}"`);
+  if (scoreSensibilite(chercheur, accompagnant) > 0) {
+    phrases[0] += ", avec un vécu proche du vôtre";
   }
 
-  phrases.push(`${accompagnant.pseudonyme} propose : "${accompagnant.aideForme}"`);
+  const premierePhrase = `${phrases[0]}.`;
+  const propose = tronquer(accompagnant.aideForme, 90);
 
-  return phrases.join(" ");
+  return `${premierePhrase} ${accompagnant.pseudonyme} propose : "${propose}"`;
 }
 
 export function generateMessageContact(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): string {
-  const phrases = [`Bonjour ${accompagnant.pseudonyme},`];
-  phrases.push(`Je m'appelle ${chercheur.pseudonyme}. ${chercheur.quiEtesVous}`);
-  phrases.push(chercheur.aideBinome);
-  phrases.push(chercheur.binomeIdeal);
-  phrases.push("Au plaisir d'échanger avec vous.");
+  const intro = tronquer(chercheur.quiEtesVous, 80);
+  const attente = tronquer(chercheur.binomeIdeal, 80);
 
-  return phrases.join(" ");
+  return [
+    `Bonjour ${accompagnant.pseudonyme}, je m'appelle ${chercheur.pseudonyme}. ${intro}`,
+    attente,
+    "Au plaisir d'échanger avec vous.",
+  ].join(" ");
 }
 
 export function recommendTop3(

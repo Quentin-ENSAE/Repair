@@ -30,14 +30,6 @@ entreprises aujourd'hui.
 
 Architecture détaillée : [docs/TDD.md](docs/TDD.md)
 
-## RePair Insights
-
-Accessible en choisissant "Je suis Référent Handicap / RH" à la création de compte
-(authentification par identifiant, pas de pseudo/âge). Affiche des indicateurs clés, des
-graphiques de répartition, et un plan d'actions généré par l'IA (3 recommandations priorisées
-avec fiche détaillée). Données simulées dans `frontend/src/app/data/dashboardData.ts` et
-`recommendations.ts`, structurées pour être remplacées par une vraie API plus tard.
-
 ## Lancer le projet
 
 ### Frontend
