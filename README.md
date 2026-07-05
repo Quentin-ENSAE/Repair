@@ -54,7 +54,7 @@ cd backend
 python -m venv .venv
 .venv\Scripts\activate        # Windows
 pip install -r requirements.txt
-cp .env.example .env          # puis renseigner GEMINI_API_KEY
+cp .env.example .env
 python -m uvicorn app.main:app --port 8001 --reload
 ```
 
