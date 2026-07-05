@@ -6,7 +6,7 @@ const STORAGE_KEY = "repair-ai-session";
 interface Account {
   type: AccountType;
   pseudonyme: string;
-  age: number;
+  age?: number;
 }
 
 interface SessionState {

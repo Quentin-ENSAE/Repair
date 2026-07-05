@@ -40,7 +40,7 @@ export function TroublesDonutChart() {
         <CardTitle className="text-xl font-bold text-primary">Répartition des troubles psychiques</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-96 w-full">
+        <div className="h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -49,8 +49,8 @@ export function TroublesDonutChart() {
                 nameKey="name"
                 cx="50%"
                 cy="50%"
-                innerRadius={90}
-                outerRadius={140}
+                innerRadius={60}
+                outerRadius={95}
                 paddingAngle={2}
                 isAnimationActive={false}
               />
@@ -58,7 +58,7 @@ export function TroublesDonutChart() {
             </PieChart>
           </ResponsiveContainer>
         </div>
-        <ul className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
+        <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 mt-2">
           {REPARTITION_TROUBLES.map((entry, index) => (
             <li key={entry.name} className="flex items-center gap-2 text-sm text-muted-foreground">
               <span

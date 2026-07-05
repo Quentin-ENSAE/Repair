@@ -10,22 +10,23 @@ export function QuestionnairePage() {
 
   useEffect(() => {
     if (!account) navigate("/creer-un-compte");
+    else if (account.type === "referent") navigate("/insights");
   }, [account, navigate]);
 
-  if (!account) return null;
+  if (!account || account.type === "referent") return null;
 
   return (
     <div className="max-w-2xl mx-auto px-6 py-16">
       {account.type === "chercheur" ? (
         <ChercheurQuestionnaire
           pseudonyme={account.pseudonyme}
-          age={account.age}
+          age={account.age ?? 0}
           existingProfile={profile?.type === "chercheur" ? profile : undefined}
         />
       ) : (
         <AccompagnantQuestionnaire
           pseudonyme={account.pseudonyme}
-          age={account.age}
+          age={account.age ?? 0}
           existingProfile={profile?.type === "accompagnant" ? profile : undefined}
         />
       )}

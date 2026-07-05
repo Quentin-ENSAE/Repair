@@ -1,7 +1,10 @@
-import { Clock, Handshake, HeartHandshake, Users } from "lucide-react";
+import { Building2, Clock, Handshake, HeartHandshake, Users } from "lucide-react";
 
 // Données simulées pour le POC "RePair Insights" — structure pensée pour être
 // remplacée telle quelle par un appel API plus tard (même formes de données).
+// Échelle cohérente avec une entreprise de ~3000 collaborateurs : une petite
+// part est accompagnée (déclarée / suivie), un pool plus large de volontaires
+// s'est inscrit comme aidant.
 
 export interface KpiStat {
   label: string;
@@ -10,23 +13,34 @@ export interface KpiStat {
   icon: typeof Users;
 }
 
-export const KPIS: KpiStat[] = [
+// Vue d'ensemble des effectifs concernés par le dispositif.
+export const KPIS_EFFECTIFS: KpiStat[] = [
+  {
+    label: "Collaborateurs de l'entreprise",
+    value: "3 000",
+    trend: "Effectif total",
+    icon: Building2,
+  },
   {
     label: "Collaborateurs accompagnés",
-    value: "128",
-    trend: "+12 ce trimestre",
+    value: "50",
+    trend: "+6 ce trimestre",
     icon: Users,
   },
   {
     label: "Collaborateurs aidants",
-    value: "37",
-    trend: "+5 ce trimestre",
+    value: "160",
+    trend: "+12 ce trimestre",
     icon: HeartHandshake,
   },
+];
+
+// Résultats concrets du dispositif de mise en relation.
+export const KPIS_RESULTATS: KpiStat[] = [
   {
     label: "Binômes créés",
-    value: "94",
-    trend: "+8 ce mois-ci",
+    value: "38",
+    trend: "+5 ce mois-ci",
     icon: Handshake,
   },
   {

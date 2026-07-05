@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router";
+import { Lock } from "lucide-react";
 import { useSession } from "../context/SessionContext";
 import { AccountType } from "../types";
 import { Button } from "../components/ui/button";
@@ -18,6 +19,8 @@ export function SignupPage() {
   const [age, setAge] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+  const estReferent = accountType === "referent";
+
   function handleStep1(e: FormEvent) {
     e.preventDefault();
     if (!accountType) {
@@ -30,17 +33,24 @@ export function SignupPage() {
 
   function handleStep2(e: FormEvent) {
     e.preventDefault();
-    const ageNum = Number(age);
     if (!pseudonyme.trim()) {
-      setError("Le pseudonyme est obligatoire.");
+      setError(estReferent ? "L'identifiant est obligatoire." : "Le pseudonyme est obligatoire.");
       return;
     }
+
+    if (estReferent) {
+      setAccount({ type: "referent", pseudonyme: pseudonyme.trim() });
+      navigate("/insights");
+      return;
+    }
+
+    const ageNum = Number(age);
     if (!age || Number.isNaN(ageNum) || ageNum <= 0) {
       setError("Merci d'indiquer un âge valide.");
       return;
     }
     setAccount({ type: accountType as AccountType, pseudonyme: pseudonyme.trim(), age: ageNum });
-    navigate(accountType === "referent" ? "/insights" : "/questionnaire");
+    navigate("/questionnaire");
   }
 
   return (
@@ -54,23 +64,37 @@ export function SignupPage() {
             <CardContent>
               <form className="flex flex-col gap-6" onSubmit={handleStep1}>
                 <RadioGroup value={accountType} onValueChange={(v) => setAccountType(v as AccountType)}>
-                  <div className="flex items-center gap-2">
-                    <RadioGroupItem value="chercheur" id="type-chercheur" />
-                    <Label htmlFor="type-chercheur" className="font-normal">
-                      Je recherche un accompagnement
-                    </Label>
+                  <div className="flex flex-col gap-3">
+                    <p className="text-sm font-semibold text-primary">Pair-aidance</p>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem value="chercheur" id="type-chercheur" />
+                      <Label htmlFor="type-chercheur" className="font-normal">
+                        Je recherche un accompagnement
+                      </Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem value="accompagnant" id="type-accompagnant" />
+                      <Label htmlFor="type-accompagnant" className="font-normal">
+                        Je souhaite accompagner une personne
+                      </Label>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <RadioGroupItem value="accompagnant" id="type-accompagnant" />
-                    <Label htmlFor="type-accompagnant" className="font-normal">
-                      Je souhaite accompagner une personne
-                    </Label>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <RadioGroupItem value="referent" id="type-referent" />
-                    <Label htmlFor="type-referent" className="font-normal">
-                      Je suis Référent Handicap / RH
-                    </Label>
+
+                  <div className="flex flex-col gap-3 rounded-xl border border-border bg-secondary/40 p-4">
+                    <p className="flex items-center gap-2 text-sm font-semibold text-primary">
+                      <Lock className="size-4" />
+                      RePair Insights — accès réservé
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem value="referent" id="type-referent" />
+                      <Label htmlFor="type-referent" className="font-normal">
+                        Je suis Référent Handicap / RH
+                      </Label>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Réservé aux personnes habilitées de votre organisation. Aucune donnée personnelle des
+                      collaborateurs n'est partagée ni identifiable dans cet espace.
+                    </p>
                   </div>
                 </RadioGroup>
 
@@ -85,46 +109,50 @@ export function SignupPage() {
         ) : (
           <>
             <CardHeader>
-              <CardTitle>Créer votre compte</CardTitle>
+              <CardTitle>{estReferent ? "Accéder à RePair Insights" : "Créer votre compte"}</CardTitle>
               <CardDescription>
-                Un pseudonyme suffit. Aucune information permettant de vous identifier publiquement ne sera
-                demandée.
+                {estReferent
+                  ? "Renseignez votre identifiant professionnel pour accéder au tableau de bord."
+                  : "Un pseudonyme suffit. Aucune information permettant de vous identifier publiquement ne sera demandée."}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form className="flex flex-col gap-5" onSubmit={handleStep2}>
                 <div className="flex flex-col gap-2">
-                  <Label htmlFor="pseudonyme">Pseudo</Label>
+                  <Label htmlFor="pseudonyme">{estReferent ? "Identifiant" : "Pseudo"}</Label>
                   <Input
                     id="pseudonyme"
                     value={pseudonyme}
                     onChange={(e) => setPseudonyme(e.target.value)}
-                    placeholder="Ex : Sam"
+                    placeholder={estReferent ? "Ex : jdupont" : "Ex : Sam"}
                   />
                 </div>
 
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="age">Âge</Label>
-                  <Input
-                    id="age"
-                    type="number"
-                    min={1}
-                    value={age}
-                    onChange={(e) => setAge(e.target.value)}
-                    placeholder="Ex : 28"
-                  />
-                </div>
+                {!estReferent && (
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="age">Âge</Label>
+                    <Input
+                      id="age"
+                      type="number"
+                      min={1}
+                      value={age}
+                      onChange={(e) => setAge(e.target.value)}
+                      placeholder="Ex : 28"
+                    />
+                  </div>
+                )}
 
                 <div className="rounded-xl bg-secondary text-secondary-foreground text-xs p-4 leading-relaxed">
-                  🔒 <span className="font-semibold">Confidentialité</span> — Vos informations sont utilisées
-                  uniquement pour personnaliser les recommandations. Elles ne sont jamais rendues publiques ni
-                  partagées avec d'autres utilisateurs sans votre accord.
+                  🔒 <span className="font-semibold">Confidentialité</span> —{" "}
+                  {estReferent
+                    ? "Aucune donnée personnelle des collaborateurs n'est partagée. RePair Insights n'expose que des statistiques anonymisées et agrégées."
+                    : "Vos informations sont utilisées uniquement pour personnaliser les recommandations. Elles ne sont jamais rendues publiques ni partagées avec d'autres utilisateurs sans votre accord."}
                 </div>
 
                 {error && <p className="text-sm text-destructive">{error}</p>}
 
                 <Button type="submit" className="rounded-2xl mt-1">
-                  Créer votre compte
+                  {estReferent ? "Accéder au tableau de bord" : "Créer votre compte"}
                 </Button>
               </form>
             </CardContent>
