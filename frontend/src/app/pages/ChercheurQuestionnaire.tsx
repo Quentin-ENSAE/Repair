@@ -2,11 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useSession } from "../context/SessionContext";
 import {
-  Anciennete,
-  ANCIENNETES,
   CentreInteret,
   CENTRES_INTERET,
   ChercheurProfile,
+  ConcerneQui,
+  CONCERNE_QUI,
+  DESCRIPTIONS_TYPE_ACCOMPAGNEMENT,
   Frequence,
   FREQUENCES,
   Langue,
@@ -17,12 +18,15 @@ import {
   NiveauBienEtre,
   RythmeRegulier,
   RYTHMES_REGULIERS,
-  TroublePsychique,
-  TROUBLES_PSYCHIQUES,
+  SavoirHandicap,
+  SAVOIR_HANDICAP,
+  TypeAccompagnement,
+  TYPES_ACCOMPAGNEMENT,
+  TypeHandicap,
+  TYPES_HANDICAP,
 } from "../types";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
 import { Label } from "../components/ui/label";
-import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Slider } from "../components/ui/slider";
 import { CheckboxGroupField } from "../components/questionnaire/CheckboxGroupField";
@@ -46,16 +50,12 @@ export function ChercheurQuestionnaire({
   const [step, setStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
-  const [diagnosticPose, setDiagnosticPose] = useState<"Oui" | "Non" | "">(
-    existingProfile ? (existingProfile.diagnosticPose ? "Oui" : "Non") : "",
+  const [concerneQui, setConcerneQui] = useState<ConcerneQui | "">(existingProfile?.concerneQui ?? "");
+  const [typeHandicap, setTypeHandicap] = useState<TypeHandicap[]>(existingProfile?.typeHandicap ?? []);
+  const [savoirHandicap, setSavoirHandicap] = useState<SavoirHandicap | "">(
+    existingProfile?.savoirHandicap ?? "",
   );
-  const [troublesPsychiques, setTroublesPsychiques] = useState<TroublePsychique[]>(
-    existingProfile?.troublesPsychiques ?? [],
-  );
-  const [troubleAutrePrecision, setTroubleAutrePrecision] = useState(existingProfile?.troubleAutrePrecision ?? "");
-  const [ancienneteDiagnostic, setAncienneteDiagnostic] = useState<Anciennete | "">(
-    existingProfile?.ancienneteDiagnostic ?? "",
-  );
+  const [aRQTH, setARQTH] = useState<"Oui" | "Non" | "">(existingProfile?.aRQTH ?? "");
 
   const [quiEtesVous, setQuiEtesVous] = useState(existingProfile?.quiEtesVous ?? "");
   const [quotidien, setQuotidien] = useState(existingProfile?.quotidien ?? "");
@@ -76,6 +76,9 @@ export function ChercheurQuestionnaire({
 
   const [motivation, setMotivation] = useState(existingProfile?.motivation ?? "");
   const [binomeIdeal, setBinomeIdeal] = useState(existingProfile?.binomeIdeal ?? "");
+  const [typeAccompagnementSouhaite, setTypeAccompagnementSouhaite] = useState<TypeAccompagnement | "">(
+    existingProfile?.typeAccompagnementSouhaite ?? "",
+  );
 
   const [frequenceSouhaitee, setFrequenceSouhaitee] = useState<Frequence | "">(
     existingProfile?.frequenceSouhaitee ?? "",
@@ -86,19 +89,8 @@ export function ChercheurQuestionnaire({
   );
   const [etatBienEtre, setEtatBienEtre] = useState<NiveauBienEtre>(existingProfile?.etatBienEtre ?? 3);
 
-  function toggleTrouble(t: TroublePsychique) {
-    setTroublesPsychiques((prev) => (prev.includes(t) ? prev.filter((v) => v !== t) : [...prev, t]));
-  }
-
   function validateStep(): string | null {
     if (step === 0) {
-      if (!diagnosticPose) return "Merci d'indiquer si un diagnostic a été posé.";
-      if (diagnosticPose === "Oui" && (troublesPsychiques.length === 0 || !ancienneteDiagnostic)) {
-        return "Merci de préciser le(s) diagnostic(s) et leur ancienneté.";
-      }
-      if (diagnosticPose === "Oui" && troublesPsychiques.includes("Autre") && !troubleAutrePrecision.trim()) {
-        return "Merci de préciser votre diagnostic.";
-      }
       if (!quiEtesVous.trim() || !quotidien.trim() || !commentProchesDecriraient.trim() || !passionsInterets.trim()) {
         return "Merci de compléter les 4 questions de la section \"Faisons connaissance\".";
       }
@@ -106,6 +98,10 @@ export function ChercheurQuestionnaire({
       if (langues.length === 0) return "Merci de sélectionner au moins une langue.";
     }
     if (step === 1) {
+      if (!concerneQui) return "Merci d'indiquer qui est concerné par le handicap.";
+      if (typeHandicap.length === 0) return "Merci de sélectionner au moins un type de handicap.";
+      if (!savoirHandicap) return "Merci d'indiquer ce que vous savez sur votre handicap.";
+      if (!aRQTH) return "Merci d'indiquer si vous avez une RQTH.";
       if (
         !lienHandicap.trim() ||
         !difficultesQuotidien.trim() ||
@@ -118,6 +114,7 @@ export function ChercheurQuestionnaire({
     }
     if (step === 2) {
       if (!motivation.trim() || !binomeIdeal.trim()) return "Merci de compléter les 2 questions.";
+      if (!typeAccompagnementSouhaite) return "Merci d'indiquer le type d'accompagnement recherché.";
     }
     if (step === 3) {
       if (!frequenceSouhaitee) return "Merci d'indiquer la fréquence souhaitée.";
@@ -147,10 +144,14 @@ export function ChercheurQuestionnaire({
       id: existingProfile?.id ?? Date.now(),
       pseudonyme,
       age,
-      diagnosticPose: diagnosticPose === "Oui",
-      troublesPsychiques: diagnosticPose === "Oui" ? troublesPsychiques : [],
-      troubleAutrePrecision: troubleAutrePrecision.trim() || undefined,
-      ancienneteDiagnostic: diagnosticPose === "Oui" ? ancienneteDiagnostic || undefined : undefined,
+      diagnosticPose: savoirHandicap !== SAVOIR_HANDICAP[0],
+      troublesPsychiques: [],
+      troubleAutrePrecision: undefined,
+      ancienneteDiagnostic: undefined,
+      concerneQui: concerneQui as ConcerneQui,
+      typeHandicap,
+      savoirHandicap: savoirHandicap as SavoirHandicap,
+      aRQTH: aRQTH as "Oui" | "Non",
       quiEtesVous: quiEtesVous.trim(),
       quotidien: quotidien.trim(),
       commentProchesDecriraient: commentProchesDecriraient.trim(),
@@ -164,6 +165,7 @@ export function ChercheurQuestionnaire({
       confianceRelation: confianceRelation.trim(),
       motivation: motivation.trim(),
       binomeIdeal: binomeIdeal.trim(),
+      typeAccompagnementSouhaite: typeAccompagnementSouhaite as TypeAccompagnement,
       frequenceSouhaitee: frequenceSouhaitee as Frequence,
       rythmeRegulier: frequenceSouhaitee === "Accompagnement régulier" ? rythmeRegulier || undefined : undefined,
       modalitesSouhaitees,
@@ -180,7 +182,7 @@ export function ChercheurQuestionnaire({
   return (
     <Card className="rounded-2xl">
       <CardHeader>
-        <CardTitle>Votre parcours</CardTitle>
+        <CardTitle>L'aide dont vous avez besoin</CardTitle>
         <CardDescription>
           Ces informations nous permettent de vous proposer les binômes les plus pertinents.
         </CardDescription>
@@ -189,41 +191,7 @@ export function ChercheurQuestionnaire({
         <div className="flex flex-col gap-8">
           {step === 0 && (
             <>
-              <RadioGroupField
-                idPrefix="diagnostic"
-                label="Un professionnel de santé vous a-t-il posé un diagnostic ?"
-                options={["Oui", "Non"] as const}
-                value={diagnosticPose}
-                onChange={setDiagnosticPose}
-              />
-
-              {diagnosticPose === "Oui" && (
-                <>
-                  <CheckboxGroupField
-                    idPrefix="trouble"
-                    label="Si oui, lequel ? (plusieurs choix possibles)"
-                    options={TROUBLES_PSYCHIQUES}
-                    values={troublesPsychiques}
-                    onChange={setTroublesPsychiques}
-                  />
-                  {troublesPsychiques.includes("Autre") && (
-                    <Input
-                      value={troubleAutrePrecision}
-                      onChange={(e) => setTroubleAutrePrecision(e.target.value)}
-                      placeholder="Précisez..."
-                    />
-                  )}
-                  <RadioGroupField
-                    idPrefix="anciennete"
-                    label="Depuis combien de temps vivez-vous avec ce diagnostic ?"
-                    options={ANCIENNETES}
-                    value={ancienneteDiagnostic}
-                    onChange={setAncienneteDiagnostic}
-                  />
-                </>
-              )}
-
-              <p className="text-sm font-semibold text-primary">Faisons connaissance</p>
+              <p className="text-lg font-bold text-primary tracking-tight">Faisons connaissance</p>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="quiEtesVous">
                   Qui êtes-vous en quelques mots ? Qu'aimez-vous faire, qu'est-ce qui vous rend heureux ?
@@ -277,11 +245,40 @@ export function ChercheurQuestionnaire({
 
           {step === 1 && (
             <>
-              <p className="text-sm font-semibold text-primary">Votre situation</p>
+              <p className="text-lg font-bold text-primary tracking-tight">Votre situation</p>
+              <RadioGroupField
+                idPrefix="concerne-qui"
+                label="Le handicap vous concerne :"
+                options={CONCERNE_QUI}
+                value={concerneQui}
+                onChange={setConcerneQui}
+              />
+              <CheckboxGroupField
+                idPrefix="type-handicap"
+                label="Quel type de handicap ? (plusieurs choix possibles)"
+                options={TYPES_HANDICAP}
+                values={typeHandicap}
+                onChange={setTypeHandicap}
+                columns={1}
+              />
+              <RadioGroupField
+                idPrefix="savoir-handicap"
+                label="Que savez-vous sur votre handicap ?"
+                options={SAVOIR_HANDICAP}
+                value={savoirHandicap}
+                onChange={setSavoirHandicap}
+              />
+              <RadioGroupField
+                idPrefix="rqth"
+                label="Avez-vous une RQTH (Reconnaissance de la Qualité de Travailleur Handicapé) ?"
+                options={["Oui", "Non"] as const}
+                value={aRQTH}
+                onChange={setARQTH}
+              />
               <div className="flex flex-col gap-2">
                 <Label htmlFor="lienHandicap">
-                  Quel est votre lien avec le handicap ? Si vous le souhaitez, vous pouvez préciser le diagnostic —
-                  c'est facultatif.
+                  Pouvez-vous nous en dire plus sur votre parcours : quel diagnostic ? Par qui ? Depuis quand ?
+                  etc.
                 </Label>
                 <Textarea id="lienHandicap" value={lienHandicap} onChange={(e) => setLienHandicap(e.target.value)} rows={3} />
               </div>
@@ -327,7 +324,7 @@ export function ChercheurQuestionnaire({
 
           {step === 2 && (
             <>
-              <p className="text-sm font-semibold text-primary">Vos attentes</p>
+              <p className="text-lg font-bold text-primary tracking-tight">Vos attentes</p>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="motivation">Qu'est-ce qui vous motive à rejoindre RePair ?</Label>
                 <Textarea id="motivation" value={motivation} onChange={(e) => setMotivation(e.target.value)} rows={3} />
@@ -341,6 +338,14 @@ export function ChercheurQuestionnaire({
                   rows={3}
                 />
               </div>
+              <RadioGroupField
+                idPrefix="type-accompagnement"
+                label="Quel type d'accompagnement recherchez-vous ?"
+                options={TYPES_ACCOMPAGNEMENT}
+                value={typeAccompagnementSouhaite}
+                onChange={setTypeAccompagnementSouhaite}
+                descriptions={DESCRIPTIONS_TYPE_ACCOMPAGNEMENT}
+              />
             </>
           )}
 

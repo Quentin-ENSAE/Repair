@@ -49,6 +49,39 @@ export type JourSemaine = (typeof JOURS_SEMAINE)[number];
 export const MOMENTS_JOURNEE = ["Matin", "Après-midi", "Soir"] as const;
 export type MomentJournee = (typeof MOMENTS_JOURNEE)[number];
 
+export const TYPES_ACCOMPAGNEMENT = ["Sparring partner", "Mentor", "Coup de main"] as const;
+export type TypeAccompagnement = (typeof TYPES_ACCOMPAGNEMENT)[number];
+
+export const DESCRIPTIONS_TYPE_ACCOMPAGNEMENT: Record<TypeAccompagnement, string> = {
+  "Sparring partner":
+    "Personne avec qui échanger et dialoguer. Situation comparable, mais pas similaire. Quelqu'un avec qui on peut échanger en toute tranquillité.",
+  Mentor: "Personne avec plus d'expérience sur le sujet. Quelqu'un qui peut nous aider à trouver des solutions.",
+  "Coup de main":
+    "Relecture de CV. Aide à l'organisation. Acquérir une compétence spécifique. Relecture de fautes d'orthographe. Aide sur un sujet très confidentiel.",
+};
+
+export const CONCERNE_QUI = ["Vous directement", "Un proche"] as const;
+export type ConcerneQui = (typeof CONCERNE_QUI)[number];
+
+export const TYPES_HANDICAP = [
+  "Handicap moteur",
+  "Handicap visuel",
+  "Handicap auditif",
+  "Handicap psychique",
+  "Handicap intellectuel",
+  "Handicap cognitif (troubles Dys, TDAH...)",
+  "Trouble du spectre de l'autisme (TSA)",
+  "Maladie invalidante / chronique",
+] as const;
+export type TypeHandicap = (typeof TYPES_HANDICAP)[number];
+
+export const SAVOIR_HANDICAP = [
+  "Je n'ai pas été diagnostiqué·e mais je me pose des questions par rapport à certaines difficultés",
+  "J'ai été diagnostiqué·e récemment",
+  "Je vis avec depuis longtemps",
+] as const;
+export type SavoirHandicap = (typeof SAVOIR_HANDICAP)[number];
+
 export const NIVEAUX_BIEN_ETRE = {
   1: "Très mal",
   2: "Plutôt mal",
@@ -94,6 +127,14 @@ export interface ChercheurProfile extends EtapeCommune {
   // Étape 3 — "Vos attentes" (texte libre)
   motivation: string;
   binomeIdeal: string;
+  typeAccompagnementSouhaite: TypeAccompagnement;
+
+  // Étape 2A — "Votre situation" (structuré, remplace l'ancien trio
+  // diagnosticPose/troublesPsychiques/ancienneteDiagnostic pour le chercheur)
+  concerneQui: ConcerneQui;
+  typeHandicap: TypeHandicap[];
+  savoirHandicap: SavoirHandicap;
+  aRQTH: "Oui" | "Non";
 
   // Étape 4A — Disponibilité (structuré) + bien-être
   frequenceSouhaitee: Frequence;
@@ -117,6 +158,7 @@ export interface AccompagnantProfile extends EtapeCommune {
   // Étape 3 — "Vos attentes" (texte libre)
   motivation: string;
   binomeIdeal: string;
+  typesAccompagnementProposes: TypeAccompagnement[];
 
   // Étape 4B — Disponibilités (structuré)
   disponibilitesJours: JourSemaine[];

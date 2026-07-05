@@ -7,6 +7,7 @@ import {
   ANCIENNETES,
   CentreInteret,
   CENTRES_INTERET,
+  DESCRIPTIONS_TYPE_ACCOMPAGNEMENT,
   Langue,
   LANGUES,
   Modalite,
@@ -16,6 +17,8 @@ import {
   JourSemaine,
   TroublePsychique,
   TROUBLES_PSYCHIQUES,
+  TypeAccompagnement,
+  TYPES_ACCOMPAGNEMENT,
 } from "../types";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
 import { Label } from "../components/ui/label";
@@ -72,6 +75,9 @@ export function AccompagnantQuestionnaire({
 
   const [motivation, setMotivation] = useState(existingProfile?.motivation ?? "");
   const [binomeIdeal, setBinomeIdeal] = useState(existingProfile?.binomeIdeal ?? "");
+  const [typesAccompagnementProposes, setTypesAccompagnementProposes] = useState<TypeAccompagnement[]>(
+    existingProfile?.typesAccompagnementProposes ?? [],
+  );
 
   const [disponibilitesJours, setDisponibilitesJours] = useState<JourSemaine[]>(
     existingProfile?.disponibilitesJours ?? [],
@@ -105,6 +111,7 @@ export function AccompagnantQuestionnaire({
     }
     if (step === 2) {
       if (!motivation.trim() || !binomeIdeal.trim()) return "Merci de compléter les 2 questions.";
+      if (typesAccompagnementProposes.length === 0) return "Merci de sélectionner au moins un type d'accompagnement.";
     }
     if (step === 3) {
       if (disponibilitesJours.length === 0 || disponibilitesMoments.length === 0) {
@@ -149,6 +156,7 @@ export function AccompagnantQuestionnaire({
       typePersonneAlaise: typePersonneAlaise.trim(),
       motivation: motivation.trim(),
       binomeIdeal: binomeIdeal.trim(),
+      typesAccompagnementProposes,
       disponibilitesJours,
       disponibilitesMoments,
       modalitesProposees,
@@ -205,7 +213,7 @@ export function AccompagnantQuestionnaire({
                 </>
               )}
 
-              <p className="text-sm font-semibold text-primary">Faisons connaissance</p>
+              <p className="text-lg font-bold text-primary tracking-tight">Faisons connaissance</p>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="quiEtesVous">
                   Qui êtes-vous en quelques mots ? Qu'aimez-vous faire, qu'est-ce qui vous rend heureux ?
@@ -259,7 +267,7 @@ export function AccompagnantQuestionnaire({
 
           {step === 1 && (
             <>
-              <p className="text-sm font-semibold text-primary">Ce que vous pouvez apporter</p>
+              <p className="text-lg font-bold text-primary tracking-tight">Ce que vous pouvez apporter</p>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="lien">
                   Quel est votre lien avec le handicap ? Comment avez-vous été sensibilisé·e à ces enjeux ?
@@ -298,7 +306,7 @@ export function AccompagnantQuestionnaire({
 
           {step === 2 && (
             <>
-              <p className="text-sm font-semibold text-primary">Vos attentes</p>
+              <p className="text-lg font-bold text-primary tracking-tight">Vos attentes</p>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="motivation">
                   Qu'est-ce qui vous motive à rejoindre ce dispositif / à devenir aidant·e ?
@@ -314,6 +322,15 @@ export function AccompagnantQuestionnaire({
                   rows={3}
                 />
               </div>
+              <CheckboxGroupField
+                idPrefix="type-accompagnement"
+                label="Quel type d'accompagnement proposez-vous ? (plusieurs choix possibles)"
+                options={TYPES_ACCOMPAGNEMENT}
+                values={typesAccompagnementProposes}
+                onChange={setTypesAccompagnementProposes}
+                columns={1}
+                descriptions={DESCRIPTIONS_TYPE_ACCOMPAGNEMENT}
+              />
             </>
           )}
 

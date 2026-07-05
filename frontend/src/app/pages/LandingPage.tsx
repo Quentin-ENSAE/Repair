@@ -4,10 +4,13 @@ import {
   CheckCircle2,
   ClipboardList,
   FlaskConical,
+  GraduationCap,
+  HandHelping,
   Handshake,
   Heart,
   Lightbulb,
   Lock,
+  MessagesSquare,
   Sparkles,
   Users,
   Video,
@@ -15,6 +18,7 @@ import {
 import { Logo } from "../components/layout/Logo";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
+import { DESCRIPTIONS_TYPE_ACCOMPAGNEMENT } from "../types";
 
 const SECTIONS = [
   {
@@ -109,6 +113,12 @@ const PAIR_AIDANCE_CARTES = [
   },
 ];
 
+const TYPES_ACCOMPAGNEMENT_LANDING = [
+  { Icone: MessagesSquare, titre: "Sparring partner", texte: DESCRIPTIONS_TYPE_ACCOMPAGNEMENT["Sparring partner"] },
+  { Icone: GraduationCap, titre: "Un mentor", texte: DESCRIPTIONS_TYPE_ACCOMPAGNEMENT["Mentor"] },
+  { Icone: HandHelping, titre: "La personne « coup de main »", texte: DESCRIPTIONS_TYPE_ACCOMPAGNEMENT["Coup de main"] },
+];
+
 const RAISONS_BENEVOLES = [
   "Écouter, rassurer et orienter les personnes que vous accompagnez",
   "Partager votre propre expérience et votre parcours",
@@ -136,7 +146,7 @@ export function LandingPage() {
 
         <div className="flex flex-col items-center gap-4">
           <h1 className="text-xl sm:text-2xl font-black tracking-tight text-primary">
-            Avec RePair, je trouve mon pair.
+            Avec RePair, je trouve ma paire.
           </h1>
           <p className="text-muted-foreground max-w-xl">
             Vous cherchez une personne qui vous comprenne vraiment ? Après un diagnostic ou face à une difficulté,
@@ -278,6 +288,39 @@ export function LandingPage() {
                   </div>
                   <h3 className="font-black text-lg leading-snug tracking-tight text-primary">{v.titre}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{v.texte}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Les 3 types d'accompagnement — sombre */}
+      <section id="types-accompagnement" className="w-full py-20 px-6 scroll-mt-20" style={{ background: "var(--primary)" }}>
+        <div className="max-w-5xl mx-auto flex flex-col items-center text-center gap-3">
+          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+            Quel type de binôme recherchez-vous ?
+          </h2>
+          <p className="text-white/70 max-w-xl mb-8">
+            RePair propose trois formes d'accompagnement, à choisir selon vos besoins.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+            {TYPES_ACCOMPAGNEMENT_LANDING.map((t) => (
+              <Card
+                key={t.titre}
+                className="rounded-2xl border-none shadow-lg transition-transform transition-shadow duration-300 hover:-translate-y-1 hover:shadow-xl"
+                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}
+              >
+                <CardContent className="pt-8 pb-8 flex flex-col items-center text-center gap-3">
+                  <div
+                    className="size-12 rounded-full flex items-center justify-center"
+                    style={{ background: "var(--accent)" }}
+                  >
+                    <t.Icone className="size-6 text-white" />
+                  </div>
+                  <h3 className="font-black text-lg leading-snug tracking-tight text-white">{t.titre}</h3>
+                  <p className="text-sm text-white/70 leading-relaxed">{t.texte}</p>
                 </CardContent>
               </Card>
             ))}

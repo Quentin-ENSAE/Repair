@@ -3,9 +3,10 @@ import { AccompagnantProfile, BinomeRecommande, ChercheurProfile } from "../type
 // Stand-in front-end temporaire pour la démo : la majorité du profil est
 // maintenant en texte libre (matière pour l'IA / le message généré). Le score
 // et le radar reposent sur un mini-socle structuré volontairement conservé
-// (intérêts, langues, modalités) pour rester fiables et explicables, complété
-// par une heuristique simple de lecture du texte libre. Sera remplacé par un
-// vrai moteur (embeddings + LLM) côté backend — voir docs/TDD.md.
+// (type d'accompagnement, intérêts, langues, modalités) pour rester fiables
+// et explicables, complété par une heuristique simple de lecture du texte
+// libre. Sera remplacé par un vrai moteur (embeddings + LLM) côté backend —
+// voir docs/TDD.md.
 
 const MOTS_CLES_HANDICAP = [
   "handicap",
@@ -33,6 +34,10 @@ function estSubstantiel(texte: string, seuil = 15): boolean {
   return texte.trim().length >= seuil;
 }
 
+function matchType(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): boolean {
+  return accompagnant.typesAccompagnementProposes.includes(chercheur.typeAccompagnementSouhaite);
+}
+
 function matchSensibilite(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): boolean {
   return chercheur.diagnosticPose && mentionneHandicap(accompagnant.lienHandicapSensibilisation);
 }
@@ -46,11 +51,12 @@ function scoreRichesse(chercheur: ChercheurProfile, accompagnant: AccompagnantPr
 export function computeScore(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): number {
   let score = 0;
 
-  score += 35 * overlapRatio(chercheur.centresInteret, accompagnant.centresInteret);
+  if (matchType(chercheur, accompagnant)) score += 25;
+  score += 20 * overlapRatio(chercheur.centresInteret, accompagnant.centresInteret);
   if (chercheur.langues.some((l) => accompagnant.langues.includes(l))) score += 15;
-  if (chercheur.modalitesSouhaitees.some((m) => accompagnant.modalitesProposees.includes(m))) score += 15;
+  if (chercheur.modalitesSouhaitees.some((m) => accompagnant.modalitesProposees.includes(m))) score += 10;
   if (matchSensibilite(chercheur, accompagnant)) score += 20;
-  score += 15 * scoreRichesse(chercheur, accompagnant);
+  score += 10 * scoreRichesse(chercheur, accompagnant);
 
   return Math.round(Math.min(score, 100));
 }
@@ -62,6 +68,7 @@ export interface RadarPoint {
 
 export function getRadarData(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): RadarPoint[] {
   return [
+    { critere: "Type", valeur: matchType(chercheur, accompagnant) ? 100 : 0 },
     {
       critere: "Intérêts",
       valeur: Math.round(100 * overlapRatio(chercheur.centresInteret, accompagnant.centresInteret)),
@@ -76,24 +83,32 @@ export function getRadarData(chercheur: ChercheurProfile, accompagnant: Accompag
   ];
 }
 
+// Repli local (si l'appel à l'IA échoue) pour les tags de compatibilité —
+// affichés tels quels, ils font déjà office de courtes étiquettes.
 export function getMatchPoints(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): string[] {
   const points: string[] = [];
 
+  if (matchType(chercheur, accompagnant)) points.push(`Type recherché : ${chercheur.typeAccompagnementSouhaite}`);
+
   const interetsCommuns = chercheur.centresInteret.filter((i) => accompagnant.centresInteret.includes(i));
-  if (interetsCommuns.length > 0) points.push(`Centres d'intérêt similaires (${interetsCommuns.join(", ")})`);
+  if (interetsCommuns.length > 0) points.push(`Intérêts communs (${interetsCommuns.join(", ")})`);
 
   if (chercheur.langues.some((l) => accompagnant.langues.includes(l))) points.push("Langue commune");
   if (chercheur.modalitesSouhaitees.some((m) => accompagnant.modalitesProposees.includes(m))) {
-    points.push("Modalité d'échange compatible");
+    points.push("Modalité compatible");
   }
-  if (matchSensibilite(chercheur, accompagnant)) points.push("Sensibilisé·e à votre type de situation");
-  if (scoreRichesse(chercheur, accompagnant) === 1) points.push("Profils détaillés des deux côtés");
+  if (matchSensibilite(chercheur, accompagnant)) points.push("Vécu comparable");
+  if (scoreRichesse(chercheur, accompagnant) === 1) points.push("Échange de qualité");
 
   return points;
 }
 
 export function generateExplication(chercheur: ChercheurProfile, accompagnant: AccompagnantProfile): string {
   const phrases = [`Nous pensons que ${accompagnant.pseudonyme} pourrait bien vous correspondre.`];
+
+  if (matchType(chercheur, accompagnant)) {
+    phrases.push(`${accompagnant.pseudonyme} propose justement un accompagnement de type "${chercheur.typeAccompagnementSouhaite}".`);
+  }
 
   const interetsCommuns = chercheur.centresInteret.filter((i) => accompagnant.centresInteret.includes(i));
   if (interetsCommuns.length > 0) {
